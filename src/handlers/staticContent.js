@@ -28,4 +28,4 @@ const serveFileContent = (request, response) => {
   return false;
 };
 
-module.exports = { serveFileContent };
+module.exports = { serveFileContent, getMimeType };

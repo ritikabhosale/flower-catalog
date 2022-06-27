@@ -1,8 +1,7 @@
 **TODO**
 - [ ] create a file not found handler
-- [ ] show comments with the form in guest-book and store comments in json
 - [ ] parse the text with spaces
-
+- [ ] format the comments in guest-book
 
 **DONE**
 - [x] create server
@@ -17,3 +16,4 @@
 - [x] add watering jar gif in index.html
 - [x] add links on pages to go to home page
 - [x] create guest book
+- [x] show comments with the form in guest-book and store comments in json

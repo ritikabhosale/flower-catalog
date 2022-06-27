@@ -2,7 +2,7 @@ const EOL = '\r\n';
 
 const statusCodeMessage = {
   200: 'OK',
-  301: 'MOVED PERMANENTLY',
+  302: 'MOVED TEMPORARILY',
   400: 'BAD REQUEST'
 };
 

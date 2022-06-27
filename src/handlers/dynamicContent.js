@@ -35,17 +35,19 @@ const addComment = ({ queryParams }, response) => {
   comments.unshift(comment);
   writeComments('data/guestBook.json', comments);
   response.setHeader('location', '/guest-book');
-  response.statusCode = 301;
+  response.statusCode = 302;
   response.send('');
   return true;
 };
 
 const serveDynamicContent = (request, response) => {
   const { uri } = request;
+  console.log('----', request.queryParams);
   if (uri === '/guest-book') {
     return serveGuestBook(request, response);
   }
   if (uri === '/add-comment') {
+    console.log(request);
     return addComment(request, response);
   }
   return false;

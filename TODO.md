@@ -1,6 +1,4 @@
 **TODO**
-- [ ] format the comments in guest-book
-- [ ] write css for guest-book
 - [ ] make the water jar animation
 
 **DONE**
@@ -21,3 +19,5 @@
 - [x] parse the text with spaces
 - [x] pdf should be downloaded upon clicking on download
 - [x] write css for html files 
+- [x] write css for guest-book
+- [x] format the comments in guest-book

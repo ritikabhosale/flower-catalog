@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { getMimeType } = require('./staticContent');
 const rowTemplate = '<tr><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
 
 const generateCommentsHTML = (comments) => {
@@ -18,38 +17,35 @@ const writeComments = (fileName, comments) => {
   fs.writeFileSync(fileName, JSON.stringify(comments), 'utf8');
 };
 
-const serveGuestBook = (request, response) => {
-  const templatePath = 'template/guestBook.html';
-  const guestBookTemplate = fs.readFileSync(templatePath, 'utf8');
-  const comments = readComments('data/guestBook.json');
-  const commentsHTML = generateCommentsHTML(comments);
-  const updatedBook = guestBookTemplate.replace('_COMMENTS-LIST_', commentsHTML);
-  response.setHeader('content-type', getMimeType(templatePath));
-  response.send(updatedBook);
-  return true;
+const addComment = (fileName, { name, comment }) => {
+  const comments = readComments(fileName);
+  if (!name || !comment) {
+    return comments;
+  }
+  const date = new Date().toString();
+  comments.unshift({ name, comment, date });
+  return comments;
 };
 
-const addComment = ({ queryParams }, response) => {
-  const date = new Date().toString();
-  const comments = readComments('data/guestBook.json');
-  const comment = { ...queryParams, date };
-  comments.unshift(comment);
-  writeComments('data/guestBook.json', comments);
-  response.setHeader('location', '/guest-book');
-  response.statusCode = 302;
-  response.send('');
+const updateGuestBook = (book, comments) => {
+  const commentsHTML = generateCommentsHTML(comments);
+  const guestBookTemplate = fs.readFileSync(book, 'utf8');
+  return guestBookTemplate.replace('_COMMENTS-LIST_', commentsHTML);
+};
+
+const serveGuestBook = ({ queryParams }, response) => {
+  const updatedComments = addComment('data/guestBook.json', queryParams);
+  writeComments('data/guestBook.json', updatedComments);
+  const bookHTML = updateGuestBook('template/guestBook.html', updatedComments);
+  response.setHeader('content-type', 'text/html');
+  response.send(bookHTML);
   return true;
 };
 
 const serveDynamicContent = (request, response) => {
   const { uri } = request;
-  console.log('----', request.queryParams);
   if (uri === '/guest-book') {
     return serveGuestBook(request, response);
-  }
-  if (uri === '/add-comment') {
-    console.log(request);
-    return addComment(request, response);
   }
   return false;
 };

@@ -1,3 +1,7 @@
+const parseValue = value => {
+  return value.replace(/\+/g, ' ');
+};
+
 const parseUri = rawUri => {
   const queryParams = {};
   const [uri, paramsString] = rawUri.split('?');
@@ -8,7 +12,7 @@ const parseUri = rawUri => {
   const params = paramsString.split('&');
   params.forEach(paramString => {
     const [param, value] = paramString.split('=');
-    queryParams[param] = value;
+    queryParams[param] = parseValue(value);
   });
   return { uri, queryParams };
 };

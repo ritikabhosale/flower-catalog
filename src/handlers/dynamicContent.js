@@ -23,7 +23,7 @@ const serveGuestBook = (request, response) => {
 };
 
 const addComment = ({ queryParams }, response) => {
-  const date = new Date().toDateString();
+  const date = new Date().toString();
   const comments = JSON.parse(fs.readFileSync('data/comments.json', 'utf8'));
   const comment = { ...queryParams, date };
   comments.unshift(comment);

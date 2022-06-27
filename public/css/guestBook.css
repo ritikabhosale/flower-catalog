@@ -13,6 +13,10 @@ body {
   color: orange;
 }
 
+.page-wrapper h2 {
+  color: #06283D;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -22,5 +26,26 @@ form {
 form .submit-button {
   width: 90px;
   height: 30px;
-  background-color: aliceblue;
+  background-color: #1363DF;
+  color: #DFF6FF;
+  font-size: 16px;
+}
+
+table {
+  border-collapse: collapse;
+  color: #06283D;
+}
+
+table th,
+td {
+  padding: 5px;
+  text-align: left;
+}
+
+table tr:nth-child(even) {
+  background-color: #DFF6FF;
+}
+
+table tr:nth-child(odd) {
+  background-color: rgba(71, 181, 255, 0.6);
 }

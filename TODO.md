@@ -1,6 +1,6 @@
 **TODO**
 - [ ] format the comments in guest-book
-- [ ] write css for html files
+- [ ] write css for html files 
 
 **DONE**
 - [x] create server
@@ -18,3 +18,4 @@
 - [x] show comments with the form in guest-book and store comments in json
 - [x] create a file not found handler
 - [x] parse the text with spaces
+- [x] pdf should be downloaded upon clicking on download

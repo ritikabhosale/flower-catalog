@@ -4,7 +4,6 @@ const { getMimeType } = require('./staticContent');
 const generateCommentsHTML = (comments) => {
   let commentsHTML = '';
   comments.forEach(({ name, comment, date }) => {
-    console.log(name, comment, date);
     commentsHTML += `${date} | ${name} | ${comment} <br/>`;
   });
   return commentsHTML;
@@ -14,7 +13,7 @@ const readComments = fileName => {
   return JSON.parse(fs.readFileSync(fileName, 'utf8'))
 };
 
-const writeComments = fileName => {
+const writeComments = (fileName, comments) => {
   fs.writeFileSync(fileName, JSON.stringify(comments), 'utf8');
 };
 
@@ -34,8 +33,8 @@ const addComment = ({ queryParams }, response) => {
   const comments = readComments('data/guestBook.json');
   const comment = { ...queryParams, date };
   comments.unshift(comment);
-  writeComments('data/guestBook.json');
-  response.setHeader('location', 'guestBook');
+  writeComments('data/guestBook.json', comments);
+  response.setHeader('location', '/guest-book');
   response.statusCode = 301;
   response.send('');
   return true;

@@ -21,7 +21,7 @@ const writeComments = fileName => {
 const serveGuestBook = (request, response) => {
   const templatePath = 'template/guestBook.html';
   const guestBookTemplate = fs.readFileSync(templatePath, 'utf8');
-  const comments = readComments('data/comments.json');
+  const comments = readComments('data/guestBook.json');
   const commentsHTML = generateCommentsHTML(comments);
   const updatedBook = guestBookTemplate.replace('_COMMENTS_', commentsHTML);
   response.setHeader('content-type', getMimeType(templatePath));
@@ -31,11 +31,11 @@ const serveGuestBook = (request, response) => {
 
 const addComment = ({ queryParams }, response) => {
   const date = new Date().toString();
-  const comments = readComments('data/comments.json');
+  const comments = readComments('data/guestBook.json');
   const comment = { ...queryParams, date };
   comments.unshift(comment);
-  writeComments('data/comments.json');
-  response.setHeader('location', 'guest-book');
+  writeComments('data/guestBook.json');
+  response.setHeader('location', 'guestBook');
   response.statusCode = 301;
   response.send('');
   return true;

@@ -1,10 +1,11 @@
 const fs = require('fs');
 const { getMimeType } = require('./staticContent');
+const rowTemplate = '<tr><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
 
 const generateCommentsHTML = (comments) => {
   let commentsHTML = '';
   comments.forEach(({ name, comment, date }) => {
-    commentsHTML += `${date} | ${name} | ${comment} <br/>`;
+    commentsHTML += rowTemplate.replace('_DATE_', date).replace('_NAME_', name).replace('_COMMENT_', comment);
   });
   return commentsHTML;
 };
@@ -22,7 +23,7 @@ const serveGuestBook = (request, response) => {
   const guestBookTemplate = fs.readFileSync(templatePath, 'utf8');
   const comments = readComments('data/guestBook.json');
   const commentsHTML = generateCommentsHTML(comments);
-  const updatedBook = guestBookTemplate.replace('_COMMENTS_', commentsHTML);
+  const updatedBook = guestBookTemplate.replace('_COMMENTS-LIST_', commentsHTML);
   response.setHeader('content-type', getMimeType(templatePath));
   response.send(updatedBook);
   return true;

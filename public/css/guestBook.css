@@ -12,3 +12,15 @@ body {
   text-align: center;
   color: orange;
 }
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+form .submit-button {
+  width: 90px;
+  height: 30px;
+  background-color: aliceblue;
+}

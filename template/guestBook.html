@@ -14,16 +14,23 @@
       <form action="/add-comment" method="get">
         <label for="name"> Name
           <input type="text" name="name" id="name" />
-        </label><br />
+        </label>
         <label for="comment"> Comment
           <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
-        </label><br />
-        <input type="submit" value="submit" />
+        </label>
+        <input type="submit" value="submit" class="submit-button" />
       </form>
     </div>
 
     <div class="comments">
-      _COMMENTS_
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Comment</th>
+        </tr>
+        _COMMENTS-LIST_
+      </table>
     </div>
   </div>
 </body>

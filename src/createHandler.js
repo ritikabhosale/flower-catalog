@@ -1,5 +1,6 @@
 const { serveFileContent } = require('./handlers/staticContent.js');
 const { serveDynamicContent } = require('./handlers/dynamicContent.js');
+const { notFoundHandler } = require('./handlers/notFound.js');
 
 const createHandler = (handlers) => {
   return (request, response) => {
@@ -12,5 +13,5 @@ const createHandler = (handlers) => {
   }
 };
 
-const handlers = [serveFileContent, serveDynamicContent];
+const handlers = [serveFileContent, serveDynamicContent, notFoundHandler];
 module.exports = { requestHandler: createHandler(handlers) };

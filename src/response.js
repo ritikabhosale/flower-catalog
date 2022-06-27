@@ -2,7 +2,8 @@ const EOL = '\r\n';
 
 const statusCodeMessage = {
   200: 'OK',
-  400: 'NOT FOUND'
+  301: 'MOVED PERMANENTLY',
+  400: 'BAD REQUEST'
 };
 
 class Response {

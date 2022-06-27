@@ -1,7 +1,7 @@
 **TODO**
-- [ ] create a file not found handler
 - [ ] parse the text with spaces
 - [ ] format the comments in guest-book
+- [ ] write css for html files
 
 **DONE**
 - [x] create server
@@ -17,3 +17,4 @@
 - [x] add links on pages to go to home page
 - [x] create guest book
 - [x] show comments with the form in guest-book and store comments in json
+- [x] create a file not found handler

@@ -1,16 +1,16 @@
 const { createServer } = require('net');
-const { serveFileContent } = require('./src/staticContentHandler.js');
+const { requestHandler } = require('./src/createHandler.js');
 const { parseRequest } = require('./src/parseRequest.js');
 const { Response } = require('./src/response.js');
 
-const startServer = (PORT, handler) => {
+const startServer = (PORT, requestHandler) => {
   const server = createServer((socket) => {
     console.log('New connection received');
     socket.on('data', (chunk) => {
       const request = parseRequest(chunk.toString());
       console.log(new Date(), request.method, request.uri);
       const response = new Response(socket);
-      handler(request, response);
+      requestHandler(request, response);
     });
     socket.on('error', (err) => { });
   });
@@ -20,4 +20,4 @@ const startServer = (PORT, handler) => {
   });
 };
 
-startServer(4444, serveFileContent);
+startServer(4444, requestHandler);

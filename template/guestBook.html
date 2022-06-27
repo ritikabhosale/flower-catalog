@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <title>Guest Book</title>
+</head>
+
+<body>
+  <div class="page-wrapper">
+    <h1><a href="index.html">&lt;&lt;</a>Guest Book</h1>
+
+    <div class="form">
+      <h2>Leave a comment</h2>
+      <form action="add-comment" method="get">
+        <label for="name"> Name
+          <input type="text" name="name" id="name" />
+        </label><br />
+        <label for="comment"> Comment
+          <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        </label><br />
+        <input type="submit" value="submit" />
+      </form>
+    </div>
+
+    <div class="comments">
+      _COMMENTS_
+    </div>
+  </div>
+</body>
+
+</html>

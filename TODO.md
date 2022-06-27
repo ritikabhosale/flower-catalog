@@ -1,8 +1,7 @@
 **TODO**
-- [ ] add links for downloads in flower content files
-- [ ] add watering jar gif in index.html
 - [ ] create a file not found handler
-
+- [ ] add links on pages to go to home page
+- [ ] create guest book
 
 **DONE**
 - [x] create server
@@ -13,3 +12,5 @@
 - [x] modify the index.html with appropriate content
 - [x] add links of other flower pages into index.html
 - [x] create html pages for other flowers
+- [x] add links for downloads in flower content files
+- [x] add watering jar gif in index.html

@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 const serveGuestBook = (request, response) => {
   const { queryParams, guestBook } = request;
 
@@ -12,7 +10,7 @@ const serveGuestBook = (request, response) => {
   return true;
 };
 
-const serveDynamicContent = (request, response) => {
+const guestBookHandler = (request, response) => {
   const { uri } = request;
   if (uri === '/guest-book') {
     return serveGuestBook(request, response);
@@ -20,4 +18,4 @@ const serveDynamicContent = (request, response) => {
   return false;
 };
 
-module.exports = { serveDynamicContent };
+module.exports = { guestBookHandler };

@@ -1,5 +1,5 @@
 const { serveFileContent } = require('./handlers/staticContent.js');
-const { serveDynamicContent } = require('./handlers/dynamicContent.js');
+const { guestBookHandler } = require('./handlers/guestBookHandler.js');
 const { notFoundHandler } = require('./handlers/notFound.js');
 const { GuestBook } = require('./guestBook.js');
 const fs = require('fs');
@@ -34,5 +34,5 @@ const loadGuestBook = (guestBookName) => {
   };
 };
 
-const handlers = [loadGuestBook('./data/guestBook.json'), serveFileContent, serveDynamicContent, notFoundHandler];
+const handlers = [loadGuestBook('./data/guestBook.json'), serveFileContent, guestBookHandler, notFoundHandler];
 module.exports = { requestHandler: createHandler(handlers) };

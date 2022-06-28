@@ -1,5 +1,4 @@
 const http = require('http');
-const { requestHandler } = require('./src/createHandler.js');
 
 const startServer = (PORT, handler) => {
   const server = http.createServer((request, response) => {
@@ -13,4 +12,4 @@ const startServer = (PORT, handler) => {
   });
 };
 
-startServer(4444, requestHandler);
+module.exports = { startServer };

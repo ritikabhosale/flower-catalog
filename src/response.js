@@ -3,7 +3,7 @@ const EOL = '\r\n';
 const statusCodeMessage = {
   200: 'OK',
   302: 'MOVED TEMPORARILY',
-  400: 'BAD REQUEST'
+  404: 'PAGE NOT FOUND'
 };
 
 class Response {

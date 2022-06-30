@@ -8,7 +8,7 @@ const routes = {
     GET: serveGuestBook(guestBookTemplate),
   },
   '/add-comment': {
-    GET: addComment
+    POST: addComment
   },
   '/api/comments': {
     GET: serveComments(dataFile)

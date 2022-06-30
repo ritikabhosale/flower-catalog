@@ -46,12 +46,4 @@ const serveGuestBook = (request, response) => {
   return true;
 };
 
-const guestBookHandler = (request, response) => {
-  const { pathname } = request.url;
-  if (pathname === '/guest-book') {
-    return serveGuestBook(request, response);
-  }
-  return false;
-};
-
-module.exports = { guestBookHandler };
+module.exports = { serveGuestBook };

@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('node:path');
 
-const serveFileContent = (request, response) => {
+const serveFileContent = serveFrom => (request, response) => {
   let { pathname } = request.url;
   pathname = pathname === '/' ? '/index.html' : pathname;
-  const fileName = path.join('./public', pathname);
+  const fileName = path.join(serveFrom, pathname);
+  console.log(fileName);
 
   if (fs.existsSync(fileName)) {
     const content = fs.readFileSync(fileName);

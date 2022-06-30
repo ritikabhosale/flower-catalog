@@ -33,17 +33,23 @@ const generateHTML = (guestBook, template) => {
   return templateString.replace('_COMMENTS-LIST_', commentsHTML);
 };
 
-const serveGuestBook = templatePath => (request, response) => {
+const addComment = (request, response) => {
   const { guestBook } = request;
   const searchParams = toSearchParams(request.url.searchParams);
-
   guestBook.addComment(searchParams);
   request.saveGuestBook(guestBook);
+  response.statusCode = 302;
+  response.setHeader('location', '/guest-book');
+  response.end();
+  return true;
+};
 
+const serveGuestBook = templatePath => (request, response) => {
+  const { guestBook } = request;
   const bookHTML = generateHTML(guestBook, templatePath);
   response.setHeader('content-type', 'text/html');
   response.end(bookHTML);
   return true;
 };
 
-module.exports = { serveGuestBook, toSearchParams };
+module.exports = { serveGuestBook, addComment, toSearchParams };

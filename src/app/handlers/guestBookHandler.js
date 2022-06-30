@@ -1,7 +1,7 @@
 const fs = require('fs');
 const rowTemplate = '<tr><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
 
-const convertToComment = (searchParams) => {
+const toSearchParams = (searchParams) => {
   let entries = {};
   for (const [key, value] of searchParams.entries()) {
     entries[key] = value;
@@ -33,17 +33,17 @@ const generateHTML = (guestBook, template) => {
   return templateString.replace('_COMMENTS-LIST_', commentsHTML);
 };
 
-const serveGuestBook = (request, response) => {
+const serveGuestBook = templatePath => (request, response) => {
   const { guestBook } = request;
-  const searchParams = convertToComment(request.url.searchParams);
+  const searchParams = toSearchParams(request.url.searchParams);
 
   guestBook.addComment(searchParams);
   request.saveGuestBook(guestBook);
 
-  const bookHTML = generateHTML(guestBook, 'src/app/template/guestBook.html');
+  const bookHTML = generateHTML(guestBook, templatePath);
   response.setHeader('content-type', 'text/html');
   response.end(bookHTML);
   return true;
 };
 
-module.exports = { serveGuestBook };
+module.exports = { serveGuestBook, toSearchParams };

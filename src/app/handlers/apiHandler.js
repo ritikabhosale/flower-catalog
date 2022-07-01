@@ -5,8 +5,6 @@ const filterRecords = (comments, name) => {
   return comments.filter(comment => comment.name === name);
 };
 
-const readComments = path => JSON.parse(fs.readFileSync(path, 'utf8'));
-
 const toString = comments => JSON.stringify(comments);
 
 const serveFilteredRecords = (request, response, dataFile) => {

@@ -6,9 +6,10 @@ const { setContentType } = require('./app/handlers/setContentType.js');
 const { router } = require('./server/router.js');
 const { routes } = require('./app/routes.js');
 const { createRouter } = require('./server/runHandlers.js');
+const { parseBodyParams } = require('./app/handlers/parseBodyParams.js');
 
 const app = (serveFrom, dataFile) => {
-  const handlers = [logRequest, setContentType, loadGuestBook(dataFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
+  const handlers = [logRequest, parseBodyParams, setContentType, loadGuestBook(dataFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
   return createRouter(handlers);
 };
 

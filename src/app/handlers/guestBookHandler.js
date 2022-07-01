@@ -34,20 +34,13 @@ const generateHTML = (guestBook, template) => {
 };
 
 const addComment = (request, response, next) => {
-  const { guestBook } = request;
-  let body = '';
-  request.on('data', (chunk) => {
-    body += chunk;
-  });
-  request.on('end', () => {
-    const searchParams = toSearchParams(new URLSearchParams(body));
-    guestBook.addComment(searchParams);
-    request.saveGuestBook(guestBook);
-    response.statusCode = 302;
-    response.setHeader('location', '/guest-book');
-    response.end();
-    return;
-  });
+  const { guestBook, bodyParams } = request;
+  guestBook.addComment(bodyParams);
+  request.saveGuestBook(guestBook);
+  response.statusCode = 302;
+  response.setHeader('location', '/guest-book');
+  response.end();
+  return;
 };
 
 const serveGuestBook = templatePath => (request, response, next) => {

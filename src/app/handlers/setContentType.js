@@ -10,7 +10,7 @@ const mimeTypes = {
 };
 
 const getMimeType = (fileName) => {
-  const extension = path.extname('/');
+  const extension = path.extname(fileName);
   const contentType = mimeTypes[extension];
   if (!contentType || extension === '') {
     return 'text/html';
@@ -18,10 +18,10 @@ const getMimeType = (fileName) => {
   return contentType;
 };
 
-const setContentType = (request, response) => {
+const setContentType = (request, response, next) => {
   const { pathname } = request.url;
   response.setHeader('content-type', getMimeType(pathname));
-  return false;
+  next();
 };
 
 module.exports = { setContentType };

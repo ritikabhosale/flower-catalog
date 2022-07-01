@@ -12,11 +12,12 @@ const write = (fileName, content) => {
 const loadGuestBook = (guestBookName) => {
   const comments = readComments(guestBookName);
   const guestBook = new GuestBook(comments);
-  return (request, response) => {
+  return (request, response, next) => {
     request.guestBook = guestBook;
     request.saveGuestBook = (guestBook) => {
       write(guestBookName, guestBook.toString());
     }
+    next();
   };
 };
 

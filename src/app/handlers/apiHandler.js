@@ -15,7 +15,7 @@ const serveFilteredRecords = (request, response, dataFile) => {
   const filteredRecords = filterRecords(comments, name);
   response.setHeader('content-type', 'text/json');
   response.end(toString(filteredRecords));
-  return true;
+  return;
 };
 
 const getCommentsFrequency = comments => {
@@ -31,7 +31,7 @@ const serveCommentsFrequency = (request, response, dataFile) => {
   const commentsFrequency = getCommentsFrequency(comments);
   response.setHeader('content-type', 'text/json');
   response.end(toString(commentsFrequency));
-  return true;
+  return;
 };
 
 const queryPresent = (request) => {
@@ -47,17 +47,17 @@ const handleQuery = (request, response, dataFile) => {
     case 'frequency':
       return serveCommentsFrequency(request, response, dataFile);
   }
-  return true;
+  return;
 };
 
-const serveComments = dataFile => (request, response) => {
+const serveComments = dataFile => (request, response, next) => {
   if (queryPresent(request)) {
     return handleQuery(request, response, dataFile);
   }
   const comments = readComments(dataFile);
   response.setHeader('content-type', 'text/json');
   response.end(toString(comments));
-  return true;
+  return;
 };
 
 module.exports = { serveComments };

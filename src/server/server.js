@@ -1,10 +1,10 @@
 const http = require('http');
 
-const startServer = (PORT, handler) => {
+const startServer = (PORT, router) => {
   const server = http.createServer((request, response) => {
     const url = new URL(`http://${request.headers.host}${request.url}`);
     request.url = url;
-    handler(request, response);
+    router(request, response);
   });
 
   server.listen(PORT, () => {

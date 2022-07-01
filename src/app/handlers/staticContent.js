@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('node:path');
 
-const serveFileContent = serveFrom => (request, response) => {
+const serveFileContent = serveFrom => (request, response, next) => {
   let { pathname } = request.url;
   pathname = pathname === '/' ? '/index.html' : pathname;
   const fileName = path.join(serveFrom, pathname);
@@ -9,9 +9,9 @@ const serveFileContent = serveFrom => (request, response) => {
   if (fs.existsSync(fileName)) {
     const content = fs.readFileSync(fileName);
     response.end(content);
-    return true;
+    return;
   }
-  return false;
+  next();
 };
 
 module.exports = { serveFileContent };

@@ -33,7 +33,7 @@ const generateHTML = (guestBook, template) => {
   return templateString.replace('_COMMENTS-LIST_', commentsHTML);
 };
 
-const addComment = (request, response) => {
+const addComment = (request, response, next) => {
   const { guestBook } = request;
   let body = '';
   request.on('data', (chunk) => {
@@ -46,16 +46,16 @@ const addComment = (request, response) => {
     response.statusCode = 302;
     response.setHeader('location', '/guest-book');
     response.end();
+    return;
   });
-  return true;
 };
 
-const serveGuestBook = templatePath => (request, response) => {
+const serveGuestBook = templatePath => (request, response, next) => {
   const { guestBook } = request;
   const bookHTML = generateHTML(guestBook, templatePath);
   response.setHeader('content-type', 'text/html');
   response.end(bookHTML);
-  return true;
+  return;
 };
 
 module.exports = { serveGuestBook, addComment, toSearchParams };

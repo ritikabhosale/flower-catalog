@@ -5,11 +5,11 @@ const { logRequest } = require('./app/handlers/logRequest.js');
 const { setContentType } = require('./app/handlers/setContentType.js');
 const { router } = require('./server/router.js');
 const { routes } = require('./app/routes.js');
-const { createHandler } = require('./server/runHandlers.js');
+const { createRouter } = require('./server/runHandlers.js');
 
 const app = (serveFrom, dataFile) => {
   const handlers = [logRequest, setContentType, loadGuestBook(dataFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
-  return createHandler(handlers);
+  return createRouter(handlers);
 };
 
-module.exports = { handlers: app('./public', './data/guestBook.json') };
+module.exports = { router: app('./public', './data/guestBook.json') };

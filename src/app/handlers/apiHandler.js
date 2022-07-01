@@ -11,10 +11,12 @@ const toString = comments => JSON.stringify(comments);
 
 const serveFilteredRecords = (request, response, dataFile) => {
   const { name } = toSearchParams(request.url.searchParams);
-  const comments = readComments(dataFile);
-  const filteredRecords = filterRecords(comments, name);
-  response.setHeader('content-type', 'text/json');
-  response.end(toString(filteredRecords));
+  fs.readFile(dataFile, (err, content) => {
+    const comments = JSON.parse(content);
+    const filteredRecords = filterRecords(comments, name);
+    response.setHeader('content-type', 'text/json');
+    response.end(toString(filteredRecords));
+  });
   return;
 };
 
@@ -27,10 +29,12 @@ const getCommentsFrequency = comments => {
 };
 
 const serveCommentsFrequency = (request, response, dataFile) => {
-  const comments = readComments(dataFile);
-  const commentsFrequency = getCommentsFrequency(comments);
-  response.setHeader('content-type', 'text/json');
-  response.end(toString(commentsFrequency));
+  fs.readFile(dataFile, (err, content) => {
+    const comments = JSON.parse(content);
+    const commentsFrequency = getCommentsFrequency(comments);
+    response.setHeader('content-type', 'text/json');
+    response.end(toString(commentsFrequency));
+  });
   return;
 };
 
@@ -54,9 +58,11 @@ const serveComments = dataFile => (request, response, next) => {
   if (queryPresent(request)) {
     return handleQuery(request, response, dataFile);
   }
-  const comments = readComments(dataFile);
-  response.setHeader('content-type', 'text/json');
-  response.end(toString(comments));
+  fs.readFile(dataFile, (err, content) => {
+    const comments = JSON.parse(content);
+    response.setHeader('content-type', 'text/json');
+    response.end(toString(comments));
+  });
   return;
 };
 

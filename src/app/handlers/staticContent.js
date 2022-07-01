@@ -7,11 +7,13 @@ const serveFileContent = serveFrom => (request, response, next) => {
   const fileName = path.join(serveFrom, pathname);
 
   if (fs.existsSync(fileName)) {
-    const content = fs.readFileSync(fileName);
-    response.end(content);
-    return;
+    fs.readFile(fileName, (err, content) => {
+      console.log(content);
+      response.end(content);
+    });
+  } else {
+    next();
   }
-  next();
 };
 
 module.exports = { serveFileContent };

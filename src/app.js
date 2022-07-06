@@ -7,10 +7,12 @@ const { router } = require('./server/router.js');
 const { routes } = require('./app/routes.js');
 const { createRouter } = require('./server/runHandlers.js');
 const { parseBodyParams } = require('./app/handlers/parseBodyParams.js');
+const { login, injectCookies, injectSession } = require('./app/handlers/loginHandler.js');
 
-const app = (serveFrom, dataFile) => {
-  const handlers = [logRequest, parseBodyParams, setContentType, loadGuestBook(dataFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
+
+const app = (serveFrom, dataFile, sessions) => {
+  const handlers = [logRequest, parseBodyParams, injectCookies, injectSession(sessions), setContentType, loadGuestBook(dataFile), serveFileContent(serveFrom), login(sessions), router(routes), notFoundHandler];
   return createRouter(handlers);
 };
 
-module.exports = { router: app('./public', './data/guestBook.json') };
+module.exports = { router: app('./public', './data/guestBook.json', {}) };

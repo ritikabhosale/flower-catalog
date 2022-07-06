@@ -44,6 +44,7 @@ const addComment = (request, response, next) => {
 };
 
 const serveGuestBook = templatePath => (request, response, next) => {
+  console.log(request.sessions);
   const { guestBook } = request;
   const bookHTML = generateHTML(guestBook, templatePath);
   response.setHeader('content-type', 'text/html');

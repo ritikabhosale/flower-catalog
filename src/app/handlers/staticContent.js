@@ -8,7 +8,6 @@ const serveFileContent = serveFrom => (request, response, next) => {
 
   if (fs.existsSync(fileName)) {
     fs.readFile(fileName, (err, content) => {
-      console.log(content);
       response.end(content);
     });
   } else {

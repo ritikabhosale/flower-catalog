@@ -3,6 +3,15 @@
 <head>
   <link rel="stylesheet" href="css/style.css">
   <title>Flower Catalog</title>
+  <script>
+    const hide = (event) => {
+      const c = event.target;
+      c.style.visibility = 'hidden';
+      setTimeout(() => {
+        c.style.visibility = 'visible';
+      }, 1000);
+    };
+  </script>
 </head>
 
 <body>
@@ -15,7 +24,7 @@
           <li><a href="abeliophyllum.html">Abeliophyllum</a></li>
           <li><a href="ageratum.html">Ageratum</a></li>
         </ul>
-        <img src="images/animated-flower-image-0021.gif" alt="water jar">
+        <img src="images/animated-flower-image-0021.gif" alt="water jar" onclick="hide(event)" id="jar">
         <a href="guest-book">Guest Book</a>
       </div>
     </div>

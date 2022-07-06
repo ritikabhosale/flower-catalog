@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const parseCookies = cookiesAsString => {
   const cookies = {};
   if (cookiesAsString) {
@@ -20,7 +22,7 @@ const createSession = sessionId => {
   return { sessionId, date: new Date().toLocaleString() };
 };
 
-const injectSession = sessions => (request, response, next) => {
+const injectSession = (request, response, next) => {
   const { sessionId } = request.cookies;
   if (sessionId) {
     request.session = sessionId;
@@ -29,22 +31,20 @@ const injectSession = sessions => (request, response, next) => {
   return;
 };
 
-const login = sessions => (request, response, next) => {
-  let { pathname } = request.url;
-  if (pathname === '/login') {
-    const { sessionId } = request.cookies;
-    if (!sessionId) {
-      const newId = new Date().getTime();
-      response.setHeader('set-cookie', 'sessionId=' + newId);
-      const session = createSession(newId);
-      sessions[newId] = session;
-      response.end('Logged in successfully');
-      return;
-    }
-    response.end('You are already logged in.');
-    return;
-  }
-  next();
+const login = sessions => (request, response) => {
+  const newId = new Date().getTime();
+  response.setHeader('set-cookie', 'sessionId=' + newId);
+  const session = createSession(newId);
+  sessions[newId] = session;
+  response.setHeader('location', '/guest-book');
+  response.statusCode = 302;
+  response.end();
+  return;
 };
 
-module.exports = { login, injectCookies, injectSession };
+const serveLoginForm = formTemplate => (request, response) => {
+  const form = fs.readFileSync(formTemplate, 'utf8');
+  response.end(form);
+};
+
+module.exports = { login, injectCookies, injectSession, serveLoginForm };

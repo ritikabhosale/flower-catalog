@@ -44,7 +44,12 @@ const addComment = (request, response, next) => {
 };
 
 const serveGuestBook = templatePath => (request, response, next) => {
-  console.log(request.sessions);
+  if (!request.session) {
+    response.setHeader('location', '/login');
+    response.statusCode = 302;
+    response.end();
+    return;
+  }
   const { guestBook } = request;
   const bookHTML = generateHTML(guestBook, templatePath);
   response.setHeader('content-type', 'text/html');

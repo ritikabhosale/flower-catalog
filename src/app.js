@@ -3,15 +3,38 @@ const { serveFileContent } = require('./app/handlers/staticContent.js');
 const { notFoundHandler } = require('./app/handlers/notFound.js');
 const { logRequest } = require('./app/handlers/logRequest.js');
 const { setContentType } = require('./app/handlers/setContentType.js');
-const { router } = require('./server/router.js');
-const { routes, sessions } = require('./app/routes.js');
-const { createRouter } = require('./server/runHandlers.js');
 const { parseBodyParams } = require('./app/handlers/parseBodyParams.js');
-const { injectCookies, injectSession, loadUserDetails } = require('./app/handlers/loginHandler.js');
+const { injectCookies, injectSession, loadUserDetails, serveLoginForm, serveSignUpForm, login, signUp, logout } = require('./app/handlers/loginHandler.js');
+const { serveGuestBook, addComment } = require('./app/handlers/guestBookHandler.js');
+const { serveComments } = require('./app/handlers/apiHandler.js');
+const { Router } = require('./server/router.js');
 
-const app = (serveFrom, commentsFile, userDetailsFile, sessions) => {
-  const handlers = [loadUserDetails(userDetailsFile), logRequest, parseBodyParams, injectCookies, injectSession(sessions), setContentType, loadGuestBook(commentsFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
-  return createRouter(handlers);
-};
+const sessions = {};
+const dataFile = './data/guestBook.json';
+const guestBookTemplate = './src/app/template/guestBook.html';
+const loginFormTemplate = './src/app/template/login.html';
+const singUpTemplate = './src/app/template/signup.html';
+const commentsFile = './data/guestBook.json';
+const userDetailsFile = './data/userDetails.json';
 
-module.exports = { router: app('./public', './data/guestBook.json', './data/userDetails.json', sessions) };
+const app = new Router();
+const router = app.createRouter();
+app.every(loadUserDetails(userDetailsFile));
+app.every(logRequest);
+app.every(parseBodyParams);
+app.every(injectCookies);
+app.every(injectSession(sessions));
+app.every(loadGuestBook(commentsFile));
+app.get('/', serveFileContent('./public'));
+app.get('/guest-book', serveGuestBook(guestBookTemplate));
+app.post('/add-comment', addComment);
+app.get('/api/comments', serveComments(dataFile));
+app.get('/login', serveLoginForm(loginFormTemplate));
+app.post('/login', login(sessions));
+app.get('/sign-up', serveSignUpForm(singUpTemplate));
+app.post('/sign-up', signUp);
+app.get('/logout', logout(sessions));
+app.every(setContentType);
+app.every(notFoundHandler);
+
+module.exports = { router };

@@ -19,12 +19,12 @@ const userDetailsFile = './data/userDetails.json';
 
 const app = new Router();
 const router = app.createRouter();
-app.every(loadUserDetails(userDetailsFile));
-app.every(logRequest);
-app.every(parseBodyParams);
-app.every(injectCookies);
-app.every(injectSession(sessions));
-app.every(loadGuestBook(commentsFile));
+app.middleware(loadUserDetails(userDetailsFile));
+app.middleware(logRequest);
+app.middleware(parseBodyParams);
+app.middleware(injectCookies);
+app.middleware(injectSession(sessions));
+app.middleware(loadGuestBook(commentsFile));
 app.get('/', serveFileContent('./public'));
 app.get('/guest-book', serveGuestBook(guestBookTemplate));
 app.post('/add-comment', addComment);
@@ -34,7 +34,7 @@ app.post('/login', login(sessions));
 app.get('/sign-up', serveSignUpForm(singUpTemplate));
 app.post('/sign-up', signUp);
 app.get('/logout', logout(sessions));
-app.every(setContentType);
-app.every(notFoundHandler);
+app.middleware(setContentType);
+app.middleware(notFoundHandler);
 
 module.exports = { router };

@@ -4,14 +4,14 @@ const { notFoundHandler } = require('./app/handlers/notFound.js');
 const { logRequest } = require('./app/handlers/logRequest.js');
 const { setContentType } = require('./app/handlers/setContentType.js');
 const { router } = require('./server/router.js');
-const { routes } = require('./app/routes.js');
+const { routes, sessions } = require('./app/routes.js');
 const { createRouter } = require('./server/runHandlers.js');
 const { parseBodyParams } = require('./app/handlers/parseBodyParams.js');
-const { injectCookies, injectSession } = require('./app/handlers/loginHandler.js');
+const { injectCookies, injectSession, loadUserDetails } = require('./app/handlers/loginHandler.js');
 
-const app = (serveFrom, dataFile) => {
-  const handlers = [logRequest, parseBodyParams, injectCookies, injectSession, setContentType, loadGuestBook(dataFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
+const app = (serveFrom, commentsFile, userDetailsFile, sessions) => {
+  const handlers = [loadUserDetails(userDetailsFile), logRequest, parseBodyParams, injectCookies, injectSession(sessions), setContentType, loadGuestBook(commentsFile), serveFileContent(serveFrom), router(routes), notFoundHandler];
   return createRouter(handlers);
 };
 
-module.exports = { router: app('./public', './data/guestBook.json') };
+module.exports = { router: app('./public', './data/guestBook.json', './data/userDetails.json', sessions) };

@@ -1,9 +1,11 @@
 const { serveGuestBook, addComment } = require('./handlers/guestBookHandler.js');
 const { serveComments } = require('./handlers/apiHandler.js');
-const { login, serveLoginForm } = require('./handlers/loginHandler.js');
+const { login, serveLoginForm, signUp, serveSignUpForm } = require('./handlers/loginHandler.js');
 const dataFile = './data/guestBook.json';
 const guestBookTemplate = './src/app/template/guestBook.html';
 const loginFormTemplate = './src/app/template/form.html';
+const singUpTemplate = './src/app/template/signup.html';
+const sessions = {};
 
 const routes = {
   '/guest-book': {
@@ -17,8 +19,12 @@ const routes = {
   },
   '/login': {
     GET: serveLoginForm(loginFormTemplate),
-    POST: login({})
+    POST: login(sessions)
+  },
+  '/sign-up': {
+    GET: serveSignUpForm(singUpTemplate),
+    POST: signUp
   }
 };
 
-module.exports = { routes };
+module.exports = { routes, sessions };

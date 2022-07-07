@@ -41,8 +41,8 @@ const serveSignUpForm = signUpTemplate => (request, response) => {
 };
 
 const signUp = (request, response) => {
-  const { name, email, password } = request.bodyParams;
-  request.usersInfo[email] = { name, email, password };
+  const { name, email, password, mobNo } = request.bodyParams;
+  request.usersInfo[email] = { name, email, password, mobNo };
   request.saveUserInfo(request.usersInfo);
   response.setHeader('location', '/login');
   response.statusCode = 302;
@@ -50,10 +50,21 @@ const signUp = (request, response) => {
   return;
 };
 
+const areCredentialsValid = ({ bodyParams, usersInfo }) => {
+  const { email, password } = bodyParams;
+  return password === usersInfo[email].password;
+}
+
 const login = sessions => (request, response) => {
   const user = getRegisteredUser(request);
   if (!user) {
     response.setHeader('location', '/sign-up');
+    response.statusCode = 302;
+    response.end();
+    return;
+  }
+  if (!areCredentialsValid(request)) {
+    response.setHeader('location', '/login');
     response.statusCode = 302;
     response.end();
     return;

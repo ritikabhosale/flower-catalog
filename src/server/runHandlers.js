@@ -1,13 +1,11 @@
-const createNext = handlers => {
-  let index = -1;
-  const callNextHandler = (req, res) => {
-    index++;
-    const currentHandler = handlers[index];
+const createNext = ([...handlers]) => {
+  const next = (req, res) => {
+    const currentHandler = handlers.shift();
     if (currentHandler) {
-      currentHandler(req, res, () => callNextHandler(req, res));
+      currentHandler(req, res, () => next(req, res));
     }
   };
-  return callNextHandler;
+  return next;
 };
 
 const createRouter = (handlers) => {

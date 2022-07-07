@@ -17,6 +17,15 @@ body {
   color: #06283D;
 }
 
+.logout {
+  text-align: center;
+  height: 30px;
+  width: 80px;
+  padding: 5px;
+  background-color: rgba(71, 181, 255, 0.6);
+  font-size: 20px;
+}
+
 form {
   display: flex;
   flex-direction: column;

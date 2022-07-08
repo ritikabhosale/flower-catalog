@@ -2,6 +2,7 @@
 
 <head>
   <link rel="stylesheet" href="css/guestBook.css">
+  <script src="scripts/addComment.js"></script>
   <title>Guest Book</title>
 </head>
 
@@ -11,14 +12,14 @@
     <div class="logout"><a href="/logout">Logout</a></div>
     <h2>Leave a comment</h2>
     <div class="form">
-      <form action="/add-comment" method="post">
+      <form>
         <label for="name"> Name
           <input type="text" name="name" id="name" />
         </label>
         <label for="comment"> Comment
           <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
         </label>
-        <input type="submit" value="submit" class="submit-button" />
+        <input type="button" onclick="addComment()" id="submit-button" value="submit" />
       </form>
     </div>
 

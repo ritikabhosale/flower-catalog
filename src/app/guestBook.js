@@ -11,6 +11,7 @@ class GuestBook {
     }
     rawComment.date = new Date().toString();
     this.#comments.unshift(rawComment);
+    return rawComment;
   };
 
   toString() {

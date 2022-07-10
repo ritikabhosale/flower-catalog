@@ -27,7 +27,7 @@ app.middleware(injectSession(sessions));
 app.middleware(loadGuestBook(commentsFile));
 app.get('/', serveFileContent('./public'));
 app.get('/guest-book', serveGuestBook(guestBookTemplate));
-app.post('/guest-book', addComment(guestBookTemplate));
+app.post('/guest-book', addComment);
 app.get('/api/comments', serveComments(dataFile));
 app.get('/login', serveLoginForm(loginFormTemplate));
 app.post('/login', login(sessions));

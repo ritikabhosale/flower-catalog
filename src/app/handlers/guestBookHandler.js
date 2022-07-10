@@ -33,12 +33,12 @@ const generateHTML = (guestBook, template) => {
   return templateString.replace('_COMMENTS-LIST_', commentsHTML);
 };
 
-const addComment = templatePath => (request, response, next) => {
+const addComment = (request, response, next) => {
   const { guestBook, bodyParams } = request;
-  guestBook.addComment(bodyParams);
+  const comment = guestBook.addComment(bodyParams);
   request.saveGuestBook(guestBook);
-  const bookHTML = generateHTML(guestBook, templatePath);
-  response.end(bookHTML);
+  response.setHeader('content-type', 'application/json');
+  response.end(JSON.stringify(comment));
   return;
 };
 
@@ -51,6 +51,7 @@ const serveGuestBook = templatePath => (request, response, next) => {
   }
   const { guestBook } = request;
   const bookHTML = generateHTML(guestBook, templatePath);
+  response.setHeader('content-type', 'text/html');
   response.end(bookHTML);
   return;
 };

@@ -1,5 +1,5 @@
 const fs = require('fs');
-const rowTemplate = '<tr><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
+const rowTemplate = '<tr id=_ID_><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
 
 const toSearchParams = (searchParams) => {
   let entries = {};
@@ -9,8 +9,8 @@ const toSearchParams = (searchParams) => {
   return entries;
 };
 
-const commentHTML = ({ name, comment, date }) => {
-  return rowTemplate.replace('_DATE_', date).replace('_NAME_', name).replace('_COMMENT_', comment);
+const commentHTML = ({ id, name, comment, date }) => {
+  return rowTemplate.replace('_ID_', id).replace('_DATE_', date).replace('_NAME_', name).replace('_COMMENT_', comment);
 };
 
 const generateCommentsHTML = (comments) => {
@@ -36,10 +36,9 @@ const generateHTML = ({ guestBook, session }, template) => {
 const addComment = (request, response, next) => {
   const { guestBook, bodyParams } = request;
   bodyParams.name = request.session.username;
-  const comment = guestBook.addComment(bodyParams);
+  guestBook.addComment(bodyParams);
   request.saveGuestBook(guestBook);
-  response.setHeader('content-type', 'application/json');
-  response.end(JSON.stringify(comment));
+  response.end();
   return;
 };
 

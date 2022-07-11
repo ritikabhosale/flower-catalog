@@ -9,19 +9,20 @@ const updateField = (elementName, innerText, parentElement) => {
   parentElement.appendChild(element);
 };
 
-const updateRow = ({ name, date, comment }, parentElement) => {
+const updateRow = ({ name, date, comment, id }, parentElement) => {
   const tr = document.createElement('tr');
+  tr.id = id;
   updateField('td', date, tr);
   updateField('td', name, tr);
   updateField('td', comment, tr);
-  parentElement.appendChild(tr);
+  parentElement.prepend(tr);
 };
 
-const updateRows = (xhr) => {
+const updateRows = id => (xhr) => {
   const comments = JSON.parse(xhr.response);
+  const newComments = comments.filter(comment => comment.id > id).reverse();
   const tbody = document.querySelector('tbody');
-  tbody.innerText = '';
-  comments.forEach((comment) => updateRow(comment, tbody));
+  newComments.forEach((comment) => updateRow(comment, tbody));
 };
 
 const createXHR = ({ method, url, params }, onload) => {
@@ -30,16 +31,15 @@ const createXHR = ({ method, url, params }, onload) => {
   xhr.onload = (event) => {
     if (xhr.status === 200) {
       onload(xhr, event);
-      return;
-    }
-    console.log('Request failed');
-  };
+    };
+  }
   xhr.send(params);
 };
 
 const updateTable = (xhr) => {
   const request = { method: 'GET', url: '/api/comments' };
-  createXHR(request, updateRows);
+  const id = document.querySelector('tbody tr:first-child').id;
+  createXHR(request, updateRows(id));
 };
 
 const addComment = () => {

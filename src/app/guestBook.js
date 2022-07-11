@@ -1,7 +1,9 @@
 class GuestBook {
   #comments;
-  constructor(comments) {
+  #id;
+  constructor(comments, id) {
     this.#comments = comments;
+    this.#id = id;
   };
 
   addComment(rawComment) {
@@ -10,6 +12,7 @@ class GuestBook {
       return;
     }
     rawComment.date = new Date().toString();
+    rawComment.id = this.#id++;
     this.#comments.unshift(rawComment);
     return rawComment;
   };

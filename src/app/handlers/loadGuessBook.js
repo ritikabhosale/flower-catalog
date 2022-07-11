@@ -11,7 +11,8 @@ const write = (fileName, content) => {
 
 const loadGuestBook = (guestBookName) => {
   const comments = readComments(guestBookName);
-  const guestBook = new GuestBook(comments);
+  const nextId = comments[0].id + 1;
+  const guestBook = new GuestBook(comments, nextId);
   return (request, response, next) => {
     request.guestBook = guestBook;
     request.saveGuestBook = (guestBook) => {

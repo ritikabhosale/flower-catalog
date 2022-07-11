@@ -51,10 +51,14 @@ td {
   text-align: left;
 }
 
-table tr:nth-child(even) {
-  background-color: #DFF6FF;
+table thead>tr {
+  background-color: rgba(71, 181, 255, 0.6);
 }
 
-table tr:nth-child(odd) {
+table tbody tr:nth-child(even) {
   background-color: rgba(71, 181, 255, 0.6);
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #DFF6FF;
 }

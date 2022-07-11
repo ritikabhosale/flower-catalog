@@ -17,24 +17,35 @@ const updateRow = ({ name, date, comment }, parentElement) => {
   parentElement.appendChild(tr);
 };
 
-const updateTable = () => {
+const updateRows = (xhr) => {
+  const comments = JSON.parse(xhr.response);
+  const tbody = document.querySelector('tbody');
+  tbody.innerText = '';
+  comments.forEach((comment) => updateRow(comment, tbody));
+};
+
+const createXHR = ({ method, url, params }, onload) => {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', '/api/comments');
-  xhr.onload = () => {
-    const comments = JSON.parse(xhr.response);
-    const tbody = document.querySelector('tbody');
-    tbody.innerText = '';
-    comments.forEach((comment) => updateRow(comment, tbody));
+  xhr.open(method, url);
+  xhr.onload = (event) => {
+    if (xhr.status === 200) {
+      onload(xhr, event);
+      return;
+    }
+    console.log('Request failed');
   };
-  xhr.send();
+  xhr.send(params);
+};
+
+const updateTable = (xhr) => {
+  const request = { method: 'GET', url: '/api/comments' };
+  createXHR(request, updateRows);
 };
 
 const addComment = () => {
-  const xhr = new XMLHttpRequest();
-  xhr.open('POST', '/guest-book');
   const bodyParams = getBodyParams('form');
-  xhr.onload = () => updateTable();
-  xhr.send(bodyParams);
+  const request = { url: '/guest-book', method: 'POST', params: bodyParams };
+  createXHR(request, updateTable);
 };
 
 window.onload = addComment;

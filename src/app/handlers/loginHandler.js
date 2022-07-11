@@ -18,8 +18,8 @@ const injectCookies = (request, response, next) => {
   next();
 };
 
-const createSession = sessionId => {
-  return { sessionId, date: new Date().toLocaleString() };
+const createSession = username => {
+  return { username, date: new Date().toLocaleString() };
 };
 
 const injectSession = sessions => (request, response, next) => {
@@ -57,6 +57,7 @@ const areCredentialsValid = ({ bodyParams, usersInfo }) => {
 
 const login = sessions => (request, response) => {
   const user = getRegisteredUser(request);
+  const username = user.name;
   if (!user) {
     response.setHeader('location', '/sign-up');
     response.statusCode = 302;
@@ -71,7 +72,7 @@ const login = sessions => (request, response) => {
   }
   const newId = new Date().getTime();
   response.setHeader('set-cookie', 'sessionId=' + newId);
-  const session = createSession(newId);
+  const session = createSession(username);
   sessions[newId] = session;
   response.setHeader('location', '/guest-book');
   response.statusCode = 302;

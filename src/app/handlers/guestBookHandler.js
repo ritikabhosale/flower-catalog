@@ -25,16 +25,17 @@ const read = (fileName) => {
   return fs.readFileSync(fileName, 'utf8');
 };
 
-const generateHTML = (guestBook, template) => {
+const generateHTML = ({ guestBook, session }, template) => {
   const commentsJSON = guestBook.toString();
   const comments = JSON.parse(commentsJSON);
   const templateString = read(template);
   const commentsHTML = generateCommentsHTML(comments);
-  return templateString.replace('_COMMENTS-LIST_', commentsHTML);
+  return templateString.replace('_COMMENTS-LIST_', commentsHTML).replace('_USERNAME_', session.username);
 };
 
 const addComment = (request, response, next) => {
   const { guestBook, bodyParams } = request;
+  bodyParams.name = request.session.username;
   const comment = guestBook.addComment(bodyParams);
   request.saveGuestBook(guestBook);
   response.setHeader('content-type', 'application/json');
@@ -49,8 +50,7 @@ const serveGuestBook = templatePath => (request, response, next) => {
     response.end();
     return;
   }
-  const { guestBook } = request;
-  const bookHTML = generateHTML(guestBook, templatePath);
+  const bookHTML = generateHTML(request, templatePath);
   response.setHeader('content-type', 'text/html');
   response.end(bookHTML);
   return;

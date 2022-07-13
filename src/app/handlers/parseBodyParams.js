@@ -1,4 +1,4 @@
-const { toSearchParams } = require('./guestBookHandler.js');
+const { toSearchParams } = require("./parseSearchParams");
 
 const parseBodyParams = (request, response, next) => {
   let body = '';

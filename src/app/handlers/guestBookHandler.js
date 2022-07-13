@@ -1,14 +1,6 @@
 const fs = require('fs');
 const rowTemplate = '<tr id=_ID_><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
 
-const toSearchParams = (searchParams) => {
-  let entries = {};
-  for (const [key, value] of searchParams.entries()) {
-    entries[key] = value;
-  }
-  return entries;
-};
-
 const commentHTML = ({ id, name, comment, date }) => {
   return rowTemplate.replace('_ID_', id).replace('_DATE_', date).replace('_NAME_', name).replace('_COMMENT_', comment);
 };
@@ -55,4 +47,4 @@ const serveGuestBook = templatePath => (request, response, next) => {
   return;
 };
 
-module.exports = { serveGuestBook, addComment, toSearchParams };
+module.exports = { serveGuestBook, addComment };

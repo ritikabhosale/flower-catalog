@@ -8,7 +8,7 @@ const { injectCookies, injectSession, loadUserDetails, serveLoginForm, serveSign
 const { serveGuestBook, addComment } = require('./app/handlers/guestBookHandler.js');
 const { serveComments } = require('./app/handlers/apiHandler.js');
 const { Router } = require('./server/router.js');
-
+const { parseSearchParams } = require('./app/handlers/parseSearchParams.js');
 const sessions = {};
 const dataFile = './data/guestBook.json';
 const guestBookTemplate = './src/app/template/guestBook.html';
@@ -21,6 +21,7 @@ const app = new Router();
 const router = app.createRouter();
 app.middleware(loadUserDetails(userDetailsFile));
 app.middleware(logRequest);
+app.middleware(parseSearchParams);
 app.middleware(parseBodyParams);
 app.middleware(injectCookies);
 app.middleware(injectSession(sessions));

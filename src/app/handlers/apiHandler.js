@@ -1,6 +1,4 @@
 const fs = require('fs');
-const { toSearchParams } = require('./guestBookHandler.js');
-
 const filterRecords = (comments, name) => {
   return comments.filter(comment => comment.name === name);
 };
@@ -36,13 +34,12 @@ const serveCommentsFrequency = (request, response, dataFile) => {
   return;
 };
 
-const queryPresent = (request) => {
-  const searchParams = toSearchParams(request.url.searchParams);
+const queryPresent = ({ searchParams }) => {
   return Object.keys(searchParams).length !== 0;
 };
 
 const handleQuery = (request, response, dataFile) => {
-  const { q } = toSearchParams(request.url.searchParams);
+  const { q } = toSearchParams(request.searchParams);
   switch (q) {
     case 'filter':
       return serveFilteredRecords(request, response, dataFile);

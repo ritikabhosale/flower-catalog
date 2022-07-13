@@ -7,9 +7,9 @@ class Router {
   #isHandlerMatching(handler, { method, url }) {
     const matchWith = new RegExp(handler.url);
     if (handler.method) {
-      return url.pathname.match(matchWith) && method === handler.method;
+      return url.match(matchWith) && method === handler.method;
     }
-    return url.pathname.match(matchWith);
+    return url.match(matchWith);
   }
 
   #getMatchingHandlers(request) {

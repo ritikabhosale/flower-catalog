@@ -19,8 +19,7 @@ const getMimeType = (fileName) => {
 };
 
 const setContentType = (request, response, next) => {
-  const { pathname } = request.url;
-  response.setHeader('content-type', getMimeType(pathname));
+  response.setHeader('content-type', getMimeType(request.url));
   next();
 };
 

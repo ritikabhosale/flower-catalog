@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('node:path');
 
 const serveFileContent = serveFrom => (request, response, next) => {
-  let { pathname } = request.url;
+  let pathname = request.url;
   pathname = pathname === '/' ? '/index.html' : pathname;
   const fileName = path.join(serveFrom, pathname);
 

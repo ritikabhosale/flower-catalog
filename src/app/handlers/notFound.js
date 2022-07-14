@@ -1,8 +1,7 @@
-const notFoundHandler = (request, response) => {
-  response.statusCode = 404;
-  response.setHeader('content-type', 'text/html');
-  response.end('Page Not Found');
+const notFound = (request, response) => {
+  response.type('text/plain');
+  response.status(404).end(`${request.url} not Found`)
   return;
 };
 
-module.exports = { notFoundHandler };
+module.exports = { notFound };

@@ -34,12 +34,12 @@ const serveCommentsFrequency = (request, response, dataFile) => {
   return;
 };
 
-const queryPresent = ({ searchParams }) => {
-  return Object.keys(searchParams).length !== 0;
+const queryPresent = ({ query }) => {
+  return Object.keys(query).length !== 0;
 };
 
 const handleQuery = (request, response, dataFile) => {
-  const { q } = toSearchParams(request.searchParams);
+  const { q } = request.query;
   switch (q) {
     case 'filter':
       return serveFilteredRecords(request, response, dataFile);

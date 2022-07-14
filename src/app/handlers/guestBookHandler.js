@@ -26,9 +26,9 @@ const generateHTML = ({ guestBook, session }, template) => {
 };
 
 const addComment = (request, response, next) => {
-  const { guestBook, bodyParams } = request;
-  bodyParams.name = request.session.username;
-  guestBook.addComment(bodyParams);
+  const { guestBook, body } = request;
+  body.name = request.session.username;
+  guestBook.addComment(body);
   request.saveGuestBook(guestBook);
   response.end();
   return;
@@ -36,12 +36,12 @@ const addComment = (request, response, next) => {
 
 const serveGuestBook = templatePath => (request, response, next) => {
   if (!request.session) {
-    response.setHeader('location', '/login');
-    response.statusCode = 302;
+    response.redirect('/login');
     response.end();
     return;
   }
   const bookHTML = generateHTML(request, templatePath);
+  console.log('hello`');
   response.setHeader('content-type', 'text/html');
   response.end(bookHTML);
   return;

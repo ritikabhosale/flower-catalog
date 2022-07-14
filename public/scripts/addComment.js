@@ -38,7 +38,10 @@ const createXHR = ({ method, url, params }, onload) => {
 
 const updateTable = (xhr) => {
   const request = { method: 'GET', url: '/api/comments' };
-  const id = document.querySelector('tbody tr:first-child').id;
+  let id = 0;
+  try {
+    id = document.querySelector('tbody tr:first-child').id;
+  } catch { }
   createXHR(request, updateRows(id));
 };
 

@@ -1,39 +1,61 @@
 const express = require('express');
-const { loadGuestBook } = require('./app/handlers/loadGuessBook.js');
 const { logRequest } = require('./app/handlers/logRequest.js');
-const { serveGuestBook, addComment } = require('./app/handlers/guestBookHandler.js');
+const { serveGuestBook, addComment, saveGuestBook } = require('./app/handlers/guestBookHandler.js');
 const { serveComments } = require('./app/handlers/apiHandler.js');
 const { injectCookies } = require('./app/handlers/injectCookies.js');
 const { injectSession } = require('./app/handlers/injectSession.js');
-const { signUp, serveSignUpForm } = require('./app/handlers/signup.js');
+const { signup, serveSignupForm, saveUserData } = require('./app/handlers/signup.js');
 const { login, serveLoginForm } = require('./app/handlers/loginHandler.js');
-const { loadUserDetails } = require('./app/handlers/loadUserDetails.js');
 const { logout } = require('./app/handlers/logout.js');
 const { notFound } = require('./app/handlers/notFound.js');
-const dataFile = './data/guestBook.json';
+const { GuestBook } = require('./app/guestBook.js');
 const guestBookTemplate = './src/app/template/guestBook.html';
 const loginFormTemplate = './src/app/template/login.html';
-const singUpTemplate = './src/app/template/signup.html';
-const commentsFile = './data/guestBook.json';
-const userDetailsFile = './data/userDetails.json';
+const signupTemplate = './src/app/template/signup.html';
 
-const createApp = (appConfig, sessions) => {
+const getUsers = (filePath, fs) => {
+  let users = {};
+  try {
+    users = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  } catch (err) { }
+  return users;
+};
+
+const getGuestBook = (guestBookPath, fs) => {
+  let comments = [];
+  try {
+    comments = JSON.parse(fs.readFileSync(guestBookPath, 'utf8'));
+  } catch (err) { }
+  return new GuestBook(comments);
+};
+
+const createApp = (appConfig, sessions, fs) => {
+  const { usersDataPath, staticDir, guestBookPath } = appConfig;
   const app = express();
+  const users = getUsers(usersDataPath, fs);
+  const guestBook = getGuestBook(guestBookPath, fs);
+
   const parseBodyParams = express.urlencoded({ extended: true });
-  app.use(loadUserDetails(userDetailsFile));
   app.use(logRequest);
   app.use(parseBodyParams);
   app.use(injectCookies);
   app.use(injectSession(sessions));
-  app.get('/guest-book', loadGuestBook(commentsFile), serveGuestBook(guestBookTemplate));
-  app.post('/guest-book', loadGuestBook(commentsFile), addComment);
-  app.get('/api/comments', serveComments(dataFile));
-  app.get('/login', serveLoginForm(loginFormTemplate));
-  app.post('/login', login(sessions));
-  app.get('/sign-up', serveSignUpForm(singUpTemplate));
-  app.post('/sign-up', signUp);
+
+  app.get('/guest-book', serveGuestBook(guestBook, guestBookTemplate, fs));
+  app.post('/guest-book', addComment(guestBook),
+    saveGuestBook(guestBook, guestBookPath, fs));
+
+  app.get('/api/comments', serveComments(guestBook));
+
+  app.get('/login', serveLoginForm(loginFormTemplate, fs));
+  app.post('/login', login(users, sessions));
+
+  app.get('/sign-up', serveSignupForm(signupTemplate, fs));
+  app.post('/sign-up', signup(users), saveUserData(users, usersDataPath, fs));
+
   app.get('/logout', logout(sessions));
-  app.use(express.static(appConfig.staticDir));
+
+  app.use(express.static(staticDir));
   app.use(notFound);
   return app;
 };

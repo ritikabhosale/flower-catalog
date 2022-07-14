@@ -1,18 +1,15 @@
-const fs = require('fs');
 const filterRecords = (comments, name) => {
   return comments.filter(comment => comment.name === name);
 };
 
 const toString = comments => JSON.stringify(comments);
 
-const serveFilteredRecords = (request, response, dataFile) => {
-  const { name } = toSearchParams(request.url.searchParams);
-  fs.readFile(dataFile, (err, content) => {
-    const comments = JSON.parse(content);
-    const filteredRecords = filterRecords(comments, name);
-    response.setHeader('content-type', 'text/json');
-    response.end(toString(filteredRecords));
-  });
+const serveFilteredRecords = ({ query }, response, guestBook) => {
+  const { name } = query;
+  const comments = JSON.parse(guestBook.toJSON());
+  const filteredRecords = filterRecords(comments, name);
+  response.setHeader('content-type', 'text/json');
+  response.end(toString(filteredRecords));
   return;
 };
 
@@ -24,13 +21,11 @@ const getCommentsFrequency = comments => {
   }, {});
 };
 
-const serveCommentsFrequency = (request, response, dataFile) => {
-  fs.readFile(dataFile, (err, content) => {
-    const comments = JSON.parse(content);
-    const commentsFrequency = getCommentsFrequency(comments);
-    response.setHeader('content-type', 'text/json');
-    response.end(toString(commentsFrequency));
-  });
+const serveCommentsFrequency = (request, response, guestBook) => {
+  const comments = JSON.parse(guestBook.toJSON());
+  const commentsFrequency = getCommentsFrequency(comments);
+  response.setHeader('content-type', 'text/json');
+  response.end(toString(commentsFrequency));
   return;
 };
 
@@ -38,26 +33,24 @@ const queryPresent = ({ query }) => {
   return Object.keys(query).length !== 0;
 };
 
-const handleQuery = (request, response, dataFile) => {
+const handleQuery = (request, response, getGuestBook) => {
   const { q } = request.query;
   switch (q) {
     case 'filter':
-      return serveFilteredRecords(request, response, dataFile);
+      return serveFilteredRecords(request, response, getGuestBook);
     case 'frequency':
-      return serveCommentsFrequency(request, response, dataFile);
+      return serveCommentsFrequency(request, response, getGuestBook);
   }
   return;
 };
 
-const serveComments = dataFile => (request, response, next) => {
+const serveComments = guestBook => (request, response) => {
   if (queryPresent(request)) {
-    return handleQuery(request, response, dataFile);
+    return handleQuery(request, response, guestBook);
   }
-  fs.readFile(dataFile, (err, content) => {
-    const comments = JSON.parse(content);
-    response.setHeader('content-type', 'text/json');
-    response.end(toString(comments));
-  });
+  const comments = JSON.parse(guestBook.toJSON());
+  response.setHeader('content-type', 'text/json');
+  response.end(toString(comments));
   return;
 };
 

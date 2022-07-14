@@ -1,4 +1,3 @@
-const fs = require('fs');
 const rowTemplate = '<tr id=_ID_><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
 
 const commentHTML = ({ id, name, comment, date }) => {
@@ -13,38 +12,38 @@ const generateCommentsHTML = (comments) => {
   return commentsHTML;
 };
 
-const read = (fileName) => {
-  return fs.readFileSync(fileName, 'utf8');
-};
-
-const generateHTML = ({ guestBook, session }, template) => {
-  const commentsJSON = guestBook.toString();
+const generateHTML = (guestBook, username, templateString) => {
+  const commentsJSON = guestBook.toJSON();
   const comments = JSON.parse(commentsJSON);
-  const templateString = read(template);
   const commentsHTML = generateCommentsHTML(comments);
-  return templateString.replace('_COMMENTS-LIST_', commentsHTML).replace('_USERNAME_', session.username);
+  return templateString.replace('_COMMENTS-LIST_', commentsHTML).replace('_USERNAME_', username);
 };
 
-const addComment = (request, response, next) => {
-  const { guestBook, body } = request;
-  body.name = request.session.username;
-  guestBook.addComment(body);
-  request.saveGuestBook(guestBook);
+const saveGuestBook = (guestBook, guestBookPath, fs) => (request, response) => {
+  fs.writeFileSync(guestBookPath, guestBook.toJSON(), 'utf8');
   response.end();
   return;
 };
 
-const serveGuestBook = templatePath => (request, response, next) => {
+const addComment = guestBook => (request, response, next) => {
+  const { body, session } = request;
+  body.name = session.username;
+  guestBook.addComment(body);
+  next();
+  return;
+};
+
+const serveGuestBook = (guestBook, template, fs) => (request, response) => {
   if (!request.session) {
     response.redirect('/login');
     response.end();
     return;
   }
-  const bookHTML = generateHTML(request, templatePath);
-  console.log('hello`');
-  response.setHeader('content-type', 'text/html');
+  const { username } = request.session;
+  const templateString = fs.readFileSync(template, 'utf8');
+  const bookHTML = generateHTML(guestBook, username, templateString);
   response.end(bookHTML);
   return;
 };
 
-module.exports = { serveGuestBook, addComment };
+module.exports = { serveGuestBook, addComment, saveGuestBook };

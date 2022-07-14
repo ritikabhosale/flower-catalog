@@ -1,10 +1,17 @@
 class GuestBook {
   #comments;
-  #id;
-  constructor(comments, id) {
+  #latestId;
+  constructor(comments) {
     this.#comments = comments;
-    this.#id = id;
+    this.#latestId = this.#getLatestId();
   };
+
+  #getLatestId() {
+    if (this.#comments.length === 0) {
+      return 1;
+    }
+    return this.#comments[0].id + 1;
+  }
 
   addComment(rawComment) {
     const { name, comment } = rawComment;
@@ -12,12 +19,13 @@ class GuestBook {
       return;
     }
     rawComment.date = new Date().toString();
-    rawComment.id = this.#id++;
+    rawComment.id = this.#latestId;
+    this.#latestId++;
     this.#comments.unshift(rawComment);
     return rawComment;
   };
 
-  toString() {
+  toJSON() {
     return JSON.stringify(this.#comments);
   }
 };

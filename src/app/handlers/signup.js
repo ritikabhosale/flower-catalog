@@ -1,6 +1,4 @@
-const fs = require('fs');
-
-const serveSignUpForm = signUpTemplate => (request, response) => {
+const serveSignupForm = (signUpTemplate, fs) => (request, response) => {
   if (request.session) {
     response.redirect('/');
     response.end();
@@ -8,20 +6,26 @@ const serveSignUpForm = signUpTemplate => (request, response) => {
   };
   const form = fs.readFileSync(signUpTemplate, 'utf8');
   response.end(form);
+  return;
 };
 
-const signUp = (request, response) => {
+const signup = users => (request, response, next) => {
   if (request.session) {
     response.redirect('/');
     response.end();
     return;
   };
   const { name, email, password, mobNo } = request.body;
-  request.usersInfo[email] = { name, email, password, mobNo };
-  request.saveUserInfo(request.usersInfo);
+  users[email] = { name, email, password, mobNo };
+  next();
+  return;
+};
+
+const saveUserData = (users, userDataPath, fs) => (request, response) => {
+  fs.writeFileSync(userDataPath, JSON.stringify(users), 'utf8');
   response.redirect('/login');
   response.end();
   return;
 };
 
-module.exports = { serveSignUpForm, signUp };
+module.exports = { serveSignupForm, signup, saveUserData };

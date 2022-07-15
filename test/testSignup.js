@@ -81,5 +81,4 @@ describe('POST /sign-up', () => {
       .set('Cookie', 'sessionId=1')
       .expect(302, done)
   });
-
 });

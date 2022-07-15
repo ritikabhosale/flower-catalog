@@ -2,14 +2,11 @@ const filterRecords = (comments, name) => {
   return comments.filter(comment => comment.name === name);
 };
 
-const toString = comments => JSON.stringify(comments);
-
 const serveFilteredRecords = ({ query }, response, guestBook) => {
   const { name } = query;
   const comments = JSON.parse(guestBook.toJSON());
   const filteredRecords = filterRecords(comments, name);
-  response.setHeader('content-type', 'text/json');
-  response.end(toString(filteredRecords));
+  response.json(filteredRecords);
   return;
 };
 
@@ -24,8 +21,7 @@ const getCommentsFrequency = comments => {
 const serveCommentsFrequency = (request, response, guestBook) => {
   const comments = JSON.parse(guestBook.toJSON());
   const commentsFrequency = getCommentsFrequency(comments);
-  response.setHeader('content-type', 'text/json');
-  response.end(toString(commentsFrequency));
+  response.json(commentsFrequency);
   return;
 };
 
@@ -45,12 +41,15 @@ const handleQuery = (request, response, getGuestBook) => {
 };
 
 const serveComments = guestBook => (request, response) => {
+  if (!request.session) {
+    response.redirect('/login');
+    return;
+  }
   if (queryPresent(request)) {
     return handleQuery(request, response, guestBook);
   }
   const comments = JSON.parse(guestBook.toJSON());
-  response.setHeader('content-type', 'text/json');
-  response.end(toString(comments));
+  response.json(comments);
   return;
 };
 

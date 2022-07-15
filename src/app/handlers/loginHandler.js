@@ -23,21 +23,20 @@ const login = (users, sessions) => (request, response) => {
   const { body } = request;
   if (request.session) {
     response.redirect('/');
-    response.end();
     return;
   };
 
   if (fieldsAbsent(request.body)) {
     response.statusCode = 400;
     const status = { success: false, message: 'All fields required' };
-    response.end(JSON.stringify(status));
+    response.json(status);
     return;
   }
 
   if (!authenticateUser(users, body)) {
     response.statusCode = 422;
     const status = { success: false, message: 'Invalid username or password' };
-    response.end(JSON.stringify(status));
+    response.json(status);
     return;
   }
 
@@ -45,14 +44,12 @@ const login = (users, sessions) => (request, response) => {
   response.cookie('sessionId', session.sessionId);
   sessions[session.sessionId] = session;
   response.redirect('/guest-book');
-  response.end();
   return;
 };
 
 const serveLoginForm = (formTemplate, fs) => (request, response) => {
   if (request.session) {
     response.redirect('/');
-    response.end();
     return;
   };
   const form = fs.readFileSync(formTemplate, 'utf8');

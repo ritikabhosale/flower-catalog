@@ -41,4 +41,15 @@ describe('GET /api/comments', () => {
       .expect('content-type', /json/)
       .expect(200, [comments[0]], done);
   });
+
+  it('should redirect to home page', (done) => {
+    const fs = {
+      readFile: () => { },
+      readFileSync: mockReadFileSync('./data/guestBook.json', JSON.stringify([]), 'utf8')
+    };
+    const res = request(createApp(appConfig, {}, fs, () => { }));
+    res.get('/api/comments')
+      .expect(302, done)
+      .expect('location', '/login')
+  });
 });

@@ -27,6 +27,10 @@ const saveGuestBook = (guestBook, guestBookPath, fs) => (request, response) => {
 
 const addComment = guestBook => (request, response, next) => {
   const { body, session } = request;
+  if (!session) {
+    response.redirect('/login');
+    return;
+  }
   body.name = session.username;
   guestBook.addComment(body);
   next();
@@ -36,7 +40,6 @@ const addComment = guestBook => (request, response, next) => {
 const serveGuestBook = (guestBook, template, fs) => (request, response) => {
   if (!request.session) {
     response.redirect('/login');
-    response.end();
     return;
   }
   const { username } = request.session;

@@ -20,9 +20,8 @@ const signup = users => (request, response, next) => {
   const details = request.body;
   if (userExists(users, details)) {
     const status = { success: false, message: 'User already exists' };
-    response.setHeader('content-type', 'application/json');
     response.statusCode = 409;
-    response.end(JSON.stringify(status));
+    response.json(status);
     return;
   }
 
@@ -34,7 +33,7 @@ const signup = users => (request, response, next) => {
 const saveUserData = (users, userDataPath, fs) => (request, response) => {
   fs.writeFileSync(userDataPath, JSON.stringify(users), 'utf8');
   const status = { success: true, message: 'Sign-up Successful' };
-  response.end(JSON.stringify(status));
+  response.json(status);
   return;
 };
 

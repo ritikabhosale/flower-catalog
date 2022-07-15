@@ -3,7 +3,6 @@ const logout = sessions => (request, response) => {
   delete sessions[sessionId];
   response.clearCookie('sessionId');
   response.redirect('/');
-  response.end();
   return;
 };
 

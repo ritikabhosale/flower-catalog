@@ -1,4 +1,5 @@
 const express = require('express');
+const { GuestBook } = require('./app/guestBook.js');
 const { logRequest } = require('./app/handlers/logRequest.js');
 const { serveGuestBook, addComment, saveGuestBook } = require('./app/handlers/guestBookHandler.js');
 const { serveComments } = require('./app/handlers/apiHandler.js');
@@ -8,7 +9,7 @@ const { signup, serveSignupForm, saveUserData } = require('./app/handlers/signup
 const { login, serveLoginForm } = require('./app/handlers/loginHandler.js');
 const { logout } = require('./app/handlers/logout.js');
 const { notFound } = require('./app/handlers/notFound.js');
-const { GuestBook } = require('./app/guestBook.js');
+
 const guestBookTemplate = './src/app/template/guestBook.html';
 const loginFormTemplate = './src/app/template/login.html';
 const signupTemplate = './src/app/template/signup.html';

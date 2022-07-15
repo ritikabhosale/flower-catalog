@@ -1,15 +1,23 @@
 const createSession = username => {
-  return { username, date: new Date().toLocaleString() };
+  const time = new Date();
+  return { sessionId: time.getTime(), time, username };
 };
 
-const getRegisteredUser = (body, users) => {
+const getUser = (body, users) => {
   return users[body.email];
 };
 
-const areCredentialsValid = (body, users) => {
-  const { email, password } = body;
-  return password === users[email].password;
-}
+const authenticateUser = (users, userDetails) => {
+  const user = users[userDetails.email];
+  if (user) {
+    return user.password === userDetails.password;
+  }
+  return false;
+};
+
+const fieldsAbsent = ({ email, password }) => {
+  return !email || !password;
+};
 
 const login = (users, sessions) => (request, response) => {
   const { body } = request;
@@ -19,24 +27,23 @@ const login = (users, sessions) => (request, response) => {
     return;
   };
 
-  const user = getRegisteredUser(body, users);
-
-  if (!user) {
-    response.redirect('/sign-up');
-    response.end();
+  if (fieldsAbsent(request.body)) {
+    response.statusCode = 400;
+    const status = { success: false, message: 'All fields required' };
+    response.end(JSON.stringify(status));
     return;
   }
 
-  if (!areCredentialsValid(body, users)) {
-    response.redirect('/login');
-    response.end();
+  if (!authenticateUser(users, body)) {
+    response.statusCode = 422;
+    const status = { success: false, message: 'Invalid username or password' };
+    response.end(JSON.stringify(status));
     return;
   }
 
-  const newId = new Date().getTime();
-  response.cookie('sessionId', newId);
-  const session = createSession(user.name);
-  sessions[newId] = session;
+  const session = createSession(getUser(body, users).name);
+  response.cookie('sessionId', session.sessionId);
+  sessions[session.sessionId] = session;
   response.redirect('/guest-book');
   response.end();
   return;

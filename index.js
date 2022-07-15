@@ -6,5 +6,5 @@ const appConfig = {
 };
 
 const fs = require('fs');
-const app = createApp(appConfig, {}, fs);
+const app = createApp(appConfig, {}, fs, console.log);
 app.listen(4444, () => console.log('Listening on http://localhost:4444'));

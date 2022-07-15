@@ -29,14 +29,14 @@ const getGuestBook = (guestBookPath, fs) => {
   return new GuestBook(comments);
 };
 
-const createApp = (appConfig, sessions, fs) => {
+const createApp = (appConfig, sessions, fs, logger) => {
   const { usersDataPath, staticDir, guestBookPath } = appConfig;
   const app = express();
   const users = getUsers(usersDataPath, fs);
   const guestBook = getGuestBook(guestBookPath, fs);
 
   const parseBodyParams = express.urlencoded({ extended: true });
-  app.use(logRequest);
+  app.use(logRequest(logger));
   app.use(parseBodyParams);
   app.use(injectCookies);
   app.use(injectSession(sessions));

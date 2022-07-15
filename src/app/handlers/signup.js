@@ -1,7 +1,6 @@
 const serveSignupForm = (signUpTemplate, fs) => (request, response) => {
   if (request.session) {
     response.redirect('/');
-    response.end();
     return;
   };
   const form = fs.readFileSync(signUpTemplate, 'utf8');
@@ -9,22 +8,33 @@ const serveSignupForm = (signUpTemplate, fs) => (request, response) => {
   return;
 };
 
+const userExists = (users, { email }) => {
+  return users[email] ? true : false;
+}
+
 const signup = users => (request, response, next) => {
   if (request.session) {
     response.redirect('/');
-    response.end();
     return;
   };
-  const { name, email, password, mobNo } = request.body;
-  users[email] = { name, email, password, mobNo };
+  const details = request.body;
+  if (userExists(users, details)) {
+    const status = { success: false, message: 'User already exists' };
+    response.setHeader('content-type', 'application/json');
+    response.statusCode = 409;
+    response.end(JSON.stringify(status));
+    return;
+  }
+
+  users[details.email] = details;
   next();
   return;
 };
 
 const saveUserData = (users, userDataPath, fs) => (request, response) => {
   fs.writeFileSync(userDataPath, JSON.stringify(users), 'utf8');
-  response.redirect('/login');
-  response.end();
+  const status = { success: true, message: 'Sign-up Successful' };
+  response.end(JSON.stringify(status));
   return;
 };
 

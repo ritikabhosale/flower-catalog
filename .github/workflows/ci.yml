@@ -1,0 +1,17 @@
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: build
+      - uses: actions/checkout@v3
+      - uses: actions/node-setup@v3
+        with:
+          node-version: "20"
+      - run: echo "Building..."
+      - run: npm install
+      - run: echo "Running test"
+      - run: npm test

@@ -11,6 +11,6 @@ jobs:
         with:
           node-version: "20"
       - name: build
-        run: |
-          echo "Building..."
-          npm install
+        run: npm install
+      - name: test
+        run: npm test

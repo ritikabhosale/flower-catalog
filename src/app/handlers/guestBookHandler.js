@@ -1,13 +1,18 @@
-const rowTemplate = '<tr id=_ID_><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>';
+const rowTemplate =
+  "<tr id=_ID_><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>";
 
 const commentHTML = ({ id, name, comment, date }) => {
-  return rowTemplate.replace('_ID_', id).replace('_DATE_', date).replace('_NAME_', name).replace('_COMMENT_', comment);
+  return rowTemplate
+    .replace("_ID_", id)
+    .replace("_DATE_", date)
+    .replace("_NAME_", name)
+    .replace("_COMMENT_", comment);
 };
 
 const generateCommentsHTML = (comments) => {
-  let commentsHTML = '';
-  comments.forEach(comment => {
-    commentsHTML += commentHTML(comment)
+  let commentsHTML = "";
+  comments.forEach((comment) => {
+    commentsHTML += commentHTML(comment);
   });
   return commentsHTML;
 };
@@ -16,19 +21,21 @@ const generateHTML = (guestBook, username, templateString) => {
   const commentsJSON = guestBook.toJSON();
   const comments = JSON.parse(commentsJSON);
   const commentsHTML = generateCommentsHTML(comments);
-  return templateString.replace('_COMMENTS-LIST_', commentsHTML).replace('_USERNAME_', username);
+  return templateString
+    .replace("_COMMENTS-LIST_", commentsHTML)
+    .replace("_USERNAME_", username);
 };
 
 const saveGuestBook = (guestBook, guestBookPath, fs) => (request, response) => {
-  fs.writeFileSync(guestBookPath, guestBook.toJSON(), 'utf8');
+  fs.writeFileSync(guestBookPath, guestBook.toJSON(), "utf8");
   response.end();
   return;
 };
 
-const addComment = guestBook => (request, response, next) => {
+const addComment = (guestBook) => (request, response, next) => {
   const { body, session } = request;
   if (!session) {
-    response.redirect('/login');
+    response.redirect("/login");
     return;
   }
   body.name = session.username;
@@ -38,12 +45,12 @@ const addComment = guestBook => (request, response, next) => {
 };
 
 const serveGuestBook = (guestBook, template, fs) => (request, response) => {
-  if (!request.session) {
-    response.redirect('/login');
-    return;
-  }
+  // if (!request.session) {
+  //   response.redirect('/login');
+  //   return;
+  // }
   const { username } = request.session;
-  const templateString = fs.readFileSync(template, 'utf8');
+  const templateString = fs.readFileSync(template, "utf8");
   const bookHTML = generateHTML(guestBook, username, templateString);
   response.end(bookHTML);
   return;

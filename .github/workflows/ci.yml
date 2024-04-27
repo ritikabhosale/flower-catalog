@@ -3,14 +3,16 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: "20"
-      - run: echo "Building..."
-      - run: npm install
-      - run: echo "Running test"
-      - run: npm test
+      - name: build
+        run: echo "Building..."
+        run: npm install
+      - name: test
+        run: echo "Running test"
+        run: npm test

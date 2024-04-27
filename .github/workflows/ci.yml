@@ -6,7 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: build
       - uses: actions/checkout@v3
       - uses: actions/node-setup@v3
         with:

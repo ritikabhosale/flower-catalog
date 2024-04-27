@@ -16,7 +16,7 @@ describe("GET /abc", () => {
     req
       .get("/abc")
       .expect(404, "/abc not Found", done)
-      .expect("content-type", /plainn/);
+      .expect("content-type", /plain/);
   });
 });
 

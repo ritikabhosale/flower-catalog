@@ -1,4 +1,4 @@
-const createSession = username => {
+const createSession = (username) => {
   const time = new Date();
   return { sessionId: time.getTime(), time, username };
 };
@@ -22,38 +22,39 @@ const fieldsAbsent = ({ email, password }) => {
 const login = (users, sessions) => (request, response) => {
   const { body } = request;
   if (request.session) {
-    response.redirect('/');
+    response.redirect("/");
     return;
-  };
+  }
 
   if (fieldsAbsent(request.body)) {
     response.statusCode = 400;
-    const status = { success: false, message: 'All fields required' };
+    const status = { success: false, message: "All fields required" };
     response.json(status);
     return;
   }
 
   if (!authenticateUser(users, body)) {
     response.statusCode = 422;
-    const status = { success: false, message: 'Invalid username or password' };
+    const status = { success: false, message: "Invalid username or password" };
     response.json(status);
     return;
   }
 
   const session = createSession(getUser(body, users).name);
-  response.cookie('sessionId', session.sessionId);
+  response.cookie("sessionId", session.sessionId);
   sessions[session.sessionId] = session;
-  response.redirect('/guest-book');
+  response.redirect("/guest-book");
   return;
 };
 
 const serveLoginForm = (formTemplate, fs) => (request, response) => {
   if (request.session) {
-    response.redirect('/');
+    response.redirect("/");
     return;
-  };
-  const form = fs.readFileSync(formTemplate, 'utf8');
-  response.end(form);
+  }
+  response.render("login");
+  // const form = fs.readFileSync(formTemplate, "utf8");
+  // response.end(form);
 };
 
 module.exports = { login, serveLoginForm };

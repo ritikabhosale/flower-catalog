@@ -49,6 +49,7 @@ const createApp = (appConfig, sessions, fs, logger) => {
   app.use(parseBodyParams);
   app.use(injectCookies);
   app.use(injectSession(sessions));
+  app.set("view engine", "pug");
 
   app.get("/guest-book", serveGuestBook(guestBook, guestBookTemplate, fs));
   app.post(

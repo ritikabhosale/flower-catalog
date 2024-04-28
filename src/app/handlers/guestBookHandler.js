@@ -50,9 +50,13 @@ const serveGuestBook = (guestBook, template, fs) => (request, response) => {
   //   return;
   // }
   const { username } = request.session;
-  const templateString = fs.readFileSync(template, "utf8");
-  const bookHTML = generateHTML(guestBook, username, templateString);
-  response.end(bookHTML);
+  const commentsJSON = guestBook.toJSON();
+  const comments = JSON.parse(commentsJSON);
+
+  response.render("guest-book", { _USERNAME_: username, _COMMENTS_: comments });
+  // const templateString = fs.readFileSync(template, "utf8");
+  // const bookHTML = generateHTML(guestBook, username, templateString);
+  // response.end(bookHTML);
   return;
 };
 

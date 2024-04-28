@@ -32,21 +32,21 @@ describe("GET /signup", () => {
 
   it("should serve signup page", (done) => {
     const req = request(createApp(appConfig, {}, fs, () => {}));
-    req.get("/signup").expect(200, done);
+    req.get("/sign-up").expect(200, done);
   });
 
   it("should redirect to home page when already logged in", (done) => {
     const sessions = { 1: { sessionId: "1", username: "a@b.c", time: "12" } };
     const req = request(createApp(appConfig, sessions, {}, () => {}));
     req
-      .post("/signup")
+      .post("/sign-up")
       .set("Cookie", ["sessionId=1"])
       .expect(302, done)
       .expect("location", "/");
   });
 });
 
-describe("POST /signup", () => {
+describe("POST /sign-up", () => {
   const appConfig = {
     staticDir: "./public",
     usersDataPath: "./data/userDetails.json",
@@ -76,7 +76,7 @@ describe("POST /signup", () => {
     const status = { success: true, message: "Sign-up Successful" };
     const req = request(createApp(appConfig, {}, fs, () => {}));
     req
-      .post("/signup")
+      .post("/sign-up")
       .send("name=r&email=r@g.c&password=r&mobNo=1")
       .expect(200, JSON.stringify(status), done);
   });
@@ -85,7 +85,7 @@ describe("POST /signup", () => {
     const req = request(createApp(appConfig, {}, fs, () => {}));
     const status = { success: false, message: "User already exists" };
     req
-      .post("/signup")
+      .post("/sign-up")
       .send("name=a&email=a@g.com&password=a&mobNo=9")
       .expect(409, status, done)
       .expect("content-type", /json/);
@@ -94,6 +94,6 @@ describe("POST /signup", () => {
   it("should redirect to home page", (done) => {
     const sessions = { 1: { sessionId: "1", username: "a@b.c", time: "12" } };
     const req = request(createApp(appConfig, sessions, fs, () => {}));
-    req.post("/signup").set("Cookie", "sessionId=1").expect(302, done);
+    req.post("/sign-up").set("Cookie", "sessionId=1").expect(302, done);
   });
 });

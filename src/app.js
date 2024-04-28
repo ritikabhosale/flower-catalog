@@ -1,3 +1,4 @@
+const { exec } = require("node:child_process");
 const express = require("express");
 const { GuestBook } = require("./app/guestBook.js");
 const { logRequest } = require("./app/handlers/logRequest.js");
@@ -31,6 +32,9 @@ const getUsers = (filePath, fs) => {
 };
 
 const getGuestBook = (guestBookPath, fs) => {
+  exec("pwd");
+  exec("ls");
+  console.log("hello");
   let comments = [];
   try {
     comments = JSON.parse(fs.readFileSync(guestBookPath, "utf8"));
@@ -63,8 +67,8 @@ const createApp = (appConfig, sessions, fs, logger) => {
   app.get("/login", serveLoginForm(loginFormTemplate, fs));
   app.post("/login", login(users, sessions));
 
-  app.get("/signup", serveSignupForm(signupTemplate, fs));
-  app.post("/signup", signup(users), saveUserData(users, usersDataPath, fs));
+  app.get("/sign-up", serveSignupForm(signupTemplate, fs));
+  app.post("/sign-up", signup(users), saveUserData(users, usersDataPath, fs));
 
   app.get("/logout", logout(sessions));
 

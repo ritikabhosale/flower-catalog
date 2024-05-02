@@ -1,4 +1,4 @@
-const serveSignupForm = (signUpTemplate, fs) => (request, response) => {
+const serveSignupForm = (request, response) => {
   if (request.session) {
     response.redirect("/");
     return;
@@ -7,33 +7,23 @@ const serveSignupForm = (signUpTemplate, fs) => (request, response) => {
   return;
 };
 
-const userExists = (users, { email }) => {
-  return users[email] ? true : false;
-};
-
-const signup = (users) => (request, response, next) => {
+const signup = (users) => async (request, response) => {
   if (request.session) {
     response.redirect("/");
     return;
   }
+
   const details = request.body;
-  if (userExists(users, details)) {
+  if (await users.doesUserExist(details)) {
     const status = { success: false, message: "User already exists" };
     response.statusCode = 409;
     response.json(status);
     return;
   }
 
-  users[details.email] = details;
-  next();
-  return;
+  users.saveUser(details);
+
+  response.redirect("/login");
 };
 
-const saveUserData = (users, userDataPath, fs) => (request, response) => {
-  fs.writeFileSync(userDataPath, JSON.stringify(users), "utf8");
-  const status = { success: true, message: "Sign-up Successful" };
-  response.json(status);
-  return;
-};
-
-module.exports = { serveSignupForm, signup, saveUserData };
+module.exports = { serveSignupForm, signup };

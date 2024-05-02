@@ -1,63 +1,38 @@
-const rowTemplate =
-  "<tr id=_ID_><td>_DATE_</td><td>_NAME_</td><td>_COMMENT_</td></tr>";
-
-const commentHTML = ({ id, name, comment, date }) => {
-  return rowTemplate
-    .replace("_ID_", id)
-    .replace("_DATE_", date)
-    .replace("_NAME_", name)
-    .replace("_COMMENT_", comment);
-};
-
-const generateCommentsHTML = (comments) => {
-  let commentsHTML = "";
-  comments.forEach((comment) => {
-    commentsHTML += commentHTML(comment);
-  });
-  return commentsHTML;
-};
-
-const generateHTML = (guestBook, username, templateString) => {
-  const commentsJSON = guestBook.toJSON();
-  const comments = JSON.parse(commentsJSON);
-  const commentsHTML = generateCommentsHTML(comments);
-  return templateString
-    .replace("_COMMENTS-LIST_", commentsHTML)
-    .replace("_USERNAME_", username);
-};
-
-const saveGuestBook = (guestBook, guestBookPath, fs) => (request, response) => {
-  fs.writeFileSync(guestBookPath, guestBook.toJSON(), "utf8");
-  response.end();
-  return;
-};
-
-const addComment = (guestBook) => (request, response, next) => {
+const addComment = (guestBook) => async (request, response) => {
   const { body, session } = request;
   if (!session) {
     response.redirect("/login");
     return;
   }
-  body.name = session.username;
-  guestBook.addComment(body);
-  next();
+
+  body.userId = session.userId;
+  await guestBook.addComment(body);
+  response.redirect("/guest-book");
+};
+
+const serveGuestBook = (guestBook) => async (request, response) => {
+  if (!request.session) {
+    response.redirect("/login");
+    return;
+  }
+
+  const userName = request.session.userName;
+
+  const comments = await guestBook.getComments();
+
+  response.render("guest-book", {
+    _USERNAME_: userName,
+    _COMMENTS_: comments.map((comment) => {
+      return {
+        id: comment.id,
+        comment: comment.body,
+        date: comment.created_at,
+        name: userName,
+      };
+    }),
+  });
+
   return;
 };
 
-const serveGuestBook = (guestBook, template, fs) => (request, response) => {
-  // if (!request.session) {
-  //   response.redirect('/login');
-  //   return;
-  // }
-  const { username } = request.session;
-  const commentsJSON = guestBook.toJSON();
-  const comments = JSON.parse(commentsJSON);
-
-  response.render("guest-book", { _USERNAME_: username, _COMMENTS_: comments });
-  // const templateString = fs.readFileSync(template, "utf8");
-  // const bookHTML = generateHTML(guestBook, username, templateString);
-  // response.end(bookHTML);
-  return;
-};
-
-module.exports = { serveGuestBook, addComment, saveGuestBook };
+module.exports = { serveGuestBook, addComment };

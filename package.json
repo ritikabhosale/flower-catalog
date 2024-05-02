@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "start": "node index.js",
-    "migrate:dev": "node-pg-migrate -f \"config/default_dev.json\"",
-    "migrate:prod": "node-pg-migrate -f \"config/default_prod.json\""
+    "start": "node-pg-migrate up && node index.js",
+    "migrate": "node-pg-migrate"
   },
   "repository": {
     "type": "git",

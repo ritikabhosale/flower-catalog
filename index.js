@@ -3,12 +3,14 @@ const { createApp } = require("./src/app.js");
 const { UserStore } = require("./src/app/repository/users.js");
 const { GuestBook } = require("./src/app/repository/guest-book.js");
 
+console.log(process.env.ENVIRONMENT);
+
 const pool = new Pool({
-  user: "ritikabhosale",
-  password: "super-secret",
-  host: "localhost",
-  port: 5432, // default Postgres port
-  database: "postgres",
+  user: process.env.USER,
+  password: process.env.PASSWORD,
+  host: process.env.HOST,
+  port: process.env.PORT,
+  database: process.env.DATABASE,
 });
 
 const appConfig = {

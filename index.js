@@ -3,8 +3,6 @@ const { createApp } = require("./src/app.js");
 const { UserStore } = require("./src/app/repository/users.js");
 const { GuestBook } = require("./src/app/repository/guest-book.js");
 
-console.log(process.env.ENVIRONMENT);
-
 const pool = new Pool({
   user: process.env.USER,
   password: process.env.PASSWORD,
@@ -18,5 +16,7 @@ const appConfig = {
   guestBook: new GuestBook(pool),
 };
 
+const port = process.env.PORT || 4444;
+
 const app = createApp(appConfig, {}, console.log);
-app.listen(4444, () => console.log("Listening on http://localhost:4444"));
+app.listen(port, () => console.log("Listening on http://localhost:4444"));

@@ -16,6 +16,7 @@ const createApp = (appConfig, sessions, logger) => {
   const app = express();
 
   const parseBodyParams = express.urlencoded({ extended: true });
+
   app.use(logRequest(logger));
   app.use(parseBodyParams);
   app.use(injectCookies);

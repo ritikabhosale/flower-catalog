@@ -12,7 +12,7 @@ describe("GET /abc", () => {
   it("should route to not found on /abc ", (done) => {
     const appConfig = { staticDir: "./public" };
     const mockedConsoleLog = mockConsoleLog("GET", "/abc");
-    const req = request(createApp(appConfig, {}, {}, mockedConsoleLog));
+    const req = request(createApp(appConfig, {}, mockedConsoleLog));
     req
       .get("/abc")
       .expect(404, "/abc not Found", done)
@@ -24,7 +24,7 @@ describe("GET /", () => {
   it("should send static content", (done) => {
     const appConfig = { staticDir: "./public" };
     const mockedConsoleLog = mockConsoleLog("GET", "/");
-    const req = request(createApp(appConfig, {}, {}, mockedConsoleLog));
+    const req = request(createApp(appConfig, {}, mockedConsoleLog));
     req
       .get("/")
       .expect(200, done)

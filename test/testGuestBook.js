@@ -1,78 +1,54 @@
 const { createApp } = require("../src/app.js");
 const request = require("supertest");
-const assert = require("assert");
-
-const mockReadFileSync = (expected, expectedEncoding) => {
-  let index = 0;
-  return (fileName, encoding) => {
-    const { content, file } = expected[index];
-    assert.strictEqual(fileName, file);
-    assert.strictEqual(encoding, expectedEncoding);
-    index++;
-    return content;
-  };
-};
-
-const mockWriteFileSync = (expectedFile, expectedContent, expectedEncoding) => {
-  return (fileName, content, encoding) => {
-    assert.strictEqual(fileName, expectedFile);
-    assert.strictEqual(encoding, expectedEncoding);
-    assert.deepStrictEqual(content, expectedContent);
-    return content;
-  };
-};
 
 describe("GET /guest-book", () => {
+  const appConfig = {
+    staticDir: "./static",
+    guestBook: {},
+  };
+
   it("should serve guest book", (done) => {
-    const appConfig = { staticDir: "./static", guestBookPath: "./hello" };
-    const fs = {
-      readFile: () => {},
-      readFileSync: mockReadFileSync(
-        [
-          { file: "./hello", content: "hello" },
-          { file: "./src/app/template/guestBook.html", content: "guestBook" },
-        ],
-        "utf8"
-      ),
+    appConfig.guestBook.getComments = () => {
+      return [
+        {
+          id: "1",
+          body: "comment",
+          createdAt: "",
+        },
+      ];
     };
     const sessions = { 1: { sessionId: "1", username: "a@b.c", time: "12" } };
-    const req = request(createApp(appConfig, sessions, fs, () => {}));
+    const req = request(createApp(appConfig, sessions, () => {}));
     req.get("/guest-book").set("cookie", "sessionId=1").expect(200, done);
   });
 
-  // it('should redirect to home page', (done) => {
-  //   const appConfig = { staticDir: './static', guestBookPath: './hello' };
-  //   const fs = {
-  //     readFile: () => { },
-  //     readFileSync: mockReadFileSync(
-  //       [{ file: './hello', content: 'hello' },
-  //       { file: './src/app/template/guestBook.html', content: 'guestBook' }],
-  //       'utf8')
-  //   };
-  //   const req = request(createApp(appConfig, {}, fs, () => { }));
-  //   req.get('/guest-book')
-  //     .expect('location', '/login')
-  //     .expect(302, done)
-  // });
+  it("should redirect to home page", (done) => {
+    const req = request(createApp(appConfig, {}, () => {}));
+    req.get("/guest-book").expect("location", "/login").expect(302, done);
+  });
 });
 
 describe("POST /guest-book", () => {
-  it("should redirect to home page", (done) => {
-    const appConfig = { staticDir: "./static", guestBookPath: "./hello" };
-    const fs = {
-      readFile: () => {},
-      readFileSync: mockReadFileSync(
-        [
-          { file: "./hello", content: "hello" },
-          { file: "./src/app/template/guestBook.html", content: "guestBook" },
-        ],
-        "utf8"
-      ),
-    };
-    const req = request(createApp(appConfig, {}, fs, () => {}));
+  const appConfig = { staticDir: "./static", guestBook: {} };
+
+  it("should redirect to login page", (done) => {
+    const req = request(createApp(appConfig, {}, () => {}));
     req
-      .post("/guest-book")
+      .post("/comment")
       .expect("location", "/login")
+      .send("name=abc&comment=something")
+      .expect(302, done);
+  });
+
+  it("should save the comment and redirect to guest book page", (done) => {
+    appConfig.guestBook.addComment = () => {};
+    const sessions = { 1: { sessionId: "1", username: "a@b.c", time: "12" } };
+
+    const req = request(createApp(appConfig, sessions, () => {}));
+    req
+      .post("/comment")
+      .set("cookie", "sessionId=1")
+      .expect("location", "/guest-book")
       .send("name=abc&comment=something")
       .expect(302, done);
   });

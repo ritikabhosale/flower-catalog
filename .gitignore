@@ -3,3 +3,4 @@ data/userDetails.json
 content.txt
 node_modules
 .env
+.vscode

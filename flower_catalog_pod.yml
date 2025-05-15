@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: flower-catalog
+spec:
+  containers:
+  - name: flower-catalog
+    image: ritikabhosale/flower-catalog:v1
+    ports:
+    - containerPort: 4444
+    env: 
+    - name: DATABASE_URL
+      value: "postgres://postgres:mysecretpassword@10.244.0.9:5432/postgres"

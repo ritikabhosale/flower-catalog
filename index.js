@@ -4,10 +4,7 @@ const { UserStore } = require("./src/app/repository/users.js");
 const { GuestBook } = require("./src/app/repository/guest-book.js");
 
 const pool = new Pool({
-  user: process.env.USER,
-  password: process.env.PASSWORD,
-  host: process.env.HOST,
-  database: process.env.DATABASE,
+  connectionString : process.env.DATABASE_URL
 });
 
 const appConfig = {

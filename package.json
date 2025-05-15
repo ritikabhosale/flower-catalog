@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "start": "node-pg-migrate up && node index.js",
-    "migrate": "node-pg-migrate"
+    "migrate": "node-pg-migrate up"
   },
   "repository": {
     "type": "git",

@@ -14,11 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: approval
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
     steps:
       - run: |
           echo "Copying file"
           touch temp
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          echo "$SSH_PRIVATE_KEY" > private_key
           chmod 600 private_key
           mkdir ~/.ssh
           ssh-keyscan -H 10.131.132.34 >> ~/.ssh/known_hosts

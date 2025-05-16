@@ -15,4 +15,11 @@ jobs:
     environment:
       name: approval
     steps:
-      - run: echo "Running when manually triggered"
+      - run: |
+          echo "Copying file"
+          touch temp
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
+          mkdir ~/.ssh
+          ssh-keyscan -H 10.131.132.34 >> ~/.ssh/known_hosts
+          scp -i private_key temp atul@10.131.132.34:/opt/fast/firmware
